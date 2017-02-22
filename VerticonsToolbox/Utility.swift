@@ -38,7 +38,7 @@ public var GlobalBackgroundQueue: DispatchQueue {
 
 // String / NSData **************************************************************************
 
-func stringArrayToNSData(_ array: [String]) -> Data {
+func stringArrayToData(_ array: [String]) -> Data {
     let data = NSMutableData()
     let terminator = [0]
     for string in array {
@@ -53,7 +53,7 @@ func stringArrayToNSData(_ array: [String]) -> Data {
     return data as Data
 }
 
-func nsDataToStringArray(_ data: Data) -> [String] {
+func dataToStringArray(_ data: Data) -> [String] {
     var decodedStrings = [String]()
     
     var stringTerminatorPositions = [Int]()
