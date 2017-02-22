@@ -7,19 +7,19 @@
 
 import UIKit
 
-class LogFileViewController: UIViewController {
+public class LogFileViewController: UIViewController {
     
     @IBOutlet weak var textView: UITextView!
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         _ = FileLogger.instance?.addListener(logFileListener)
     }
 
-    override func didReceiveMemoryWarning() {
+    override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

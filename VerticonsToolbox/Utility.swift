@@ -120,19 +120,19 @@ public func alertUser(title: String?, body: String?) {
 
 // Other **************************************************************************
 
-open class LocalTime {
+public class LocalTime {
     fileprivate static let dateFormatter: DateFormatter = {
         var formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy HH:mm:ss")
         return formatter
     }()
     
-    open class var text : String {
+    public class var text : String {
         return dateFormatter.string(from: Date())
     }
 }
 
-class ElapsedTime : CustomStringConvertible {
+public class ElapsedTime : CustomStringConvertible {
     fileprivate let startTime = Date()
     fileprivate let timeFormatter = DateComponentsFormatter()
     
@@ -142,11 +142,11 @@ class ElapsedTime : CustomStringConvertible {
         timeFormatter.allowedUnits = [.hour, .minute, .second]
     }
     
-    var elapsedTime : TimeInterval {
+    public var elapsedTime : TimeInterval {
         return Date().timeIntervalSince(startTime)
     }
     
-    var description : String {
+    public var description : String {
         return timeFormatter.string(from: elapsedTime)!
     }
 }
