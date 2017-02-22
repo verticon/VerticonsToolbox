@@ -38,7 +38,7 @@ public var GlobalBackgroundQueue: DispatchQueue {
 
 // String / NSData **************************************************************************
 
-func stringArrayToData(_ array: [String]) -> Data {
+public func stringArrayToData(_ array: [String]) -> Data {
     let data = NSMutableData()
     let terminator = [0]
     for string in array {
@@ -53,7 +53,7 @@ func stringArrayToData(_ array: [String]) -> Data {
     return data as Data
 }
 
-func dataToStringArray(_ data: Data) -> [String] {
+public func dataToStringArray(_ data: Data) -> [String] {
     var decodedStrings = [String]()
     
     var stringTerminatorPositions = [Int]()
@@ -107,7 +107,7 @@ public func notifyUser(_ message:  String) {
     }
 }
 
-func hasNotifyPermission() -> Bool {
+public func hasNotifyPermission() -> Bool {
     let currentSettings = UIApplication.shared.currentUserNotificationSettings
     return currentSettings!.types.contains(.alert) && currentSettings!.types.contains(.sound)
 }
