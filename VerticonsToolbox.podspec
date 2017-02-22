@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VerticonsToolbox"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "A collection of UI extensions, utility functions, etc."
 
   # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
- A collection of UI extensions, utility functions, etc. that are used across my other frameworks
+ A collection of UI extensions, utility functions, etc. that are used across my other frameworks and applications
                   DESC
 
   s.homepage     = "https://github.com/verticon/VerticonsToolbox.git"
@@ -65,7 +65,7 @@ Pod::Spec.new do |s|
   #
 
   # s.platform     = :ios
-  # s.platform     = :ios, "5.0"
+  s.platform     = :ios, "10.0"
 
   #  When using multiple platforms
   # s.ios.deployment_target = "5.0"
@@ -91,7 +91,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "VerticonsToolbox"
+  s.source_files  = "VerticonsToolbox", "VerticonsToolbox/**/*.{swift,h}"
   # s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
