@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Log File-->
+        <scene sceneID="hsY-Kz-CcB">
+            <objects>
+                <viewController title="Log File" id="6On-yu-01T" customClass="LogFileViewController" customModule="Toolbox" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="h6a-HW-RjF"/>
+                        <viewControllerLayoutGuide type="bottom" id="MLH-ui-Tsw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="hOL-pp-qJP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DgI-9E-1A7">
+                                <rect key="frame" x="5" y="72" width="588" height="471"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="DgI-9E-1A7" secondAttribute="trailing" constant="-13" id="FNF-2I-OUO"/>
+                            <constraint firstItem="MLH-ui-Tsw" firstAttribute="top" secondItem="DgI-9E-1A7" secondAttribute="bottom" constant="8" symbolic="YES" id="LRa-cB-bjy"/>
+                            <constraint firstItem="DgI-9E-1A7" firstAttribute="top" secondItem="h6a-HW-RjF" secondAttribute="bottom" constant="8" symbolic="YES" id="M9U-uL-5oc"/>
+                            <constraint firstItem="DgI-9E-1A7" firstAttribute="leading" secondItem="hOL-pp-qJP" secondAttribute="leadingMargin" constant="-15" id="hXZ-uG-GpF"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Log File" id="dwe-aS-nZm"/>
+                    <connections>
+                        <outlet property="textView" destination="DgI-9E-1A7" id="zLL-ZY-jMG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zCS-FY-aG3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1358" y="1046"/>
+        </scene>
+        <!--Log File Navigation-->
+        <scene sceneID="7es-Fa-rWq">
+            <objects>
+                <navigationController storyboardIdentifier="Log File Navigation" title="Log File Navigation" automaticallyAdjustsScrollViewInsets="NO" id="7AI-qV-Tej" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Log File" image="first" id="gIK-ay-ZZn"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kph-Ef-M4h">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="6On-yu-01T" kind="relationship" relationship="rootViewController" id="w7L-GL-vbh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7DC-8a-KPb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="552" y="1046"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="first" width="30" height="30"/>
+    </resources>
+</document>
