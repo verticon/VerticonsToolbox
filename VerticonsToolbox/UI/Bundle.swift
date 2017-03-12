@@ -8,10 +8,10 @@
 
 import Foundation
 
-extension Bundle {
+public extension Bundle {
     
-    static func loadView<T>(fromNib name: String, withType type: T.Type) -> T {
-        if let view = Bundle.main.loadNibNamed(name, owner: nil, options: nil)?.first as? T {
+    public static func loadView<T: UIView>(fromNib name: String, withType type: T.Type) -> T {
+        if let view = Bundle(for: type).loadNibNamed(name, owner: nil, options: nil)?.first as? T {
             return view
         }
         

@@ -65,7 +65,7 @@ public extension UIView {
      let myCustomView: CustomView? = CustomView.fromNib()  // NIB named "CustomView" might not exist
      let myCustomView = CustomView.fromNib("some other NIB name")
      
-     I encountered some difficulty with the connection of the NIB to the class' outlets.
+     I encountered some difficulty with the connection of the NIB to the custom class' outlets.
      I found that I needed to configure the NIB in a certain way:
      1) For the Fileowner - In the Identity Inspector, leave the Custom Class blank
      2) For the outermost View - In the Identity Inspector, set the Custom Class to the desired class
@@ -82,24 +82,36 @@ public extension UIView {
     }
     
     public class func fromNib<T : UIView>(_ nibNameOrNil: String? = nil, type: T.Type) -> T? {
+/*
         var view: T?
-        
-        let name: String
+
+         let name: String
         if let nibName = nibNameOrNil {
             name = nibName
         } else {
             // Most nibs are demangled by practice, if not, just declare string explicitly
             name = nibName
         }
+
+         let bundle = Bundle(for: T.self)
+         let nibViews = bundle.loadNibNamed(name, owner: nil, options: nil)
+         for v in nibViews! {
+         if let tog = v as? T {
+         view = tog
+         }
+         }
+         
+         return view
+*/
+        let name = nibNameOrNil == nil ? nibName : nibNameOrNil!
         
-        let nibViews = Bundle.main.loadNibNamed(name, owner: nil, options: nil)
-        for v in nibViews! {
-            if let tog = v as? T {
-                view = tog
+        if let views = Bundle(for: type).loadNibNamed(name, owner: nil) {
+            for view in views  {
+                if let v = view as? T { return v }
             }
         }
         
-        return view
+        return nil
     }
     
     public class var nibName: String {

@@ -14,23 +14,15 @@ public protocol HexadecimalInputViewDelegate: class {
 
 public class HexadecimalInputView: UIView {
     
-    public enum ErrorCode : Error {
-        case CannotLoadView
-    }
-    
     public weak var delegate: HexadecimalInputViewDelegate?
     
     @IBAction func keyTapped(_ sender: UIButton) {
         self.delegate?.newInput(character: sender.titleLabel!.text!)
     }
 
-    public static func setupHexadecimalInput(to: UITextField, delegate: HexadecimalInputViewDelegate) throws {
-        if let inputView = Bundle(for: HexadecimalInputView.self).loadNibNamed("HexadecimalInputView", owner: nil)?[0] as? HexadecimalInputView {
-            inputView.delegate = delegate
-            to.inputView = inputView
-        }
-        else {
-            throw ErrorCode.CannotLoadView
-        }
+    public static func setup(forTextField: UITextField, withDelegate: HexadecimalInputViewDelegate) {
+        let inputView = HexadecimalInputView.fromNib()
+        forTextField.inputView = inputView
+        inputView.delegate = withDelegate
     }
 }
