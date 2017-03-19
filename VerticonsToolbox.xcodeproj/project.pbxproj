@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E15356E11E73104A009C2C61 /* HexadecimalInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15356E01E73104A009C2C61 /* HexadecimalInputView.xib */; };
-		E15356E31E732BAC009C2C61 /* HexadecimalInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15356E21E732BAC009C2C61 /* HexadecimalInputView.swift */; };
-		E15356E71E738941009C2C61 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15356E61E738941009C2C61 /* Bundle.swift */; };
+		E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */; };
+		E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */; };
 		E1B762091E5DC68600B01E19 /* VerticonsToolbox.h in Headers */ = {isa = PBXBuildFile; fileRef = E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762111E5DC76300B01E19 /* AlertController.swift */; };
 		E1B7621A1E5DC76300B01E19 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762121E5DC76300B01E19 /* Application.swift */; };
@@ -27,9 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E15356E01E73104A009C2C61 /* HexadecimalInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HexadecimalInputView.xib; path = UI/HexadecimalInputView.xib; sourceTree = "<group>"; };
-		E15356E21E732BAC009C2C61 /* HexadecimalInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalInputView.swift; path = UI/HexadecimalInputView.swift; sourceTree = "<group>"; };
-		E15356E61E738941009C2C61 /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bundle.swift; path = UI/Bundle.swift; sourceTree = "<group>"; };
+		E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HexadecimalKeypad.xib; path = UI/HexadecimalKeypad.xib; sourceTree = "<group>"; };
+		E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalKeypad.swift; path = UI/HexadecimalKeypad.swift; sourceTree = "<group>"; };
 		E1B762041E5DC68600B01E19 /* VerticonsToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VerticonsToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VerticonsToolbox.h; sourceTree = "<group>"; };
 		E1B762081E5DC68600B01E19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,14 +94,13 @@
 				E1B762111E5DC76300B01E19 /* AlertController.swift */,
 				E1B762121E5DC76300B01E19 /* Application.swift */,
 				E1B762131E5DC76300B01E19 /* Autoresizing.swift */,
-				E15356E61E738941009C2C61 /* Bundle.swift */,
 				E1B762141E5DC76300B01E19 /* Button.swift */,
 				E1B762151E5DC76300B01E19 /* Color.swift */,
 				E1B762161E5DC76300B01E19 /* Image.swift */,
 				E1B762171E5DC76300B01E19 /* View.swift */,
 				E1B762181E5DC76300B01E19 /* Window.swift */,
-				E15356E01E73104A009C2C61 /* HexadecimalInputView.xib */,
-				E15356E21E732BAC009C2C61 /* HexadecimalInputView.swift */,
+				E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */,
+				E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -187,7 +184,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E15356E11E73104A009C2C61 /* HexadecimalInputView.xib in Resources */,
+				E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */,
 				E1B7622B1E5DC79200B01E19 /* Toolbox.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,7 +197,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1B7621A1E5DC76300B01E19 /* Application.swift in Sources */,
-				E15356E71E738941009C2C61 /* Bundle.swift in Sources */,
 				E1B762281E5DC79200B01E19 /* LogFileViewController.swift in Sources */,
 				E1B7621E1E5DC76300B01E19 /* Image.swift in Sources */,
 				E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */,
@@ -208,7 +204,7 @@
 				E1B7621D1E5DC76300B01E19 /* Color.swift in Sources */,
 				E1B7621F1E5DC76300B01E19 /* View.swift in Sources */,
 				E1B762291E5DC79200B01E19 /* Print.swift in Sources */,
-				E15356E31E732BAC009C2C61 /* HexadecimalInputView.swift in Sources */,
+				E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */,
 				E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */,
 				E1B7621C1E5DC76300B01E19 /* Button.swift in Sources */,
 				E1B762201E5DC76300B01E19 /* Window.swift in Sources */,
