@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */; };
 		E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */; };
+		E15424D21E828CB300EFC780 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15424D11E828CB300EFC780 /* UIFont.swift */; };
 		E1B762091E5DC68600B01E19 /* VerticonsToolbox.h in Headers */ = {isa = PBXBuildFile; fileRef = E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762111E5DC76300B01E19 /* AlertController.swift */; };
 		E1B7621A1E5DC76300B01E19 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762121E5DC76300B01E19 /* Application.swift */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HexadecimalKeypad.xib; path = UI/HexadecimalKeypad.xib; sourceTree = "<group>"; };
 		E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalKeypad.swift; path = UI/HexadecimalKeypad.swift; sourceTree = "<group>"; };
+		E15424D11E828CB300EFC780 /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		E1B762041E5DC68600B01E19 /* VerticonsToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VerticonsToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VerticonsToolbox.h; sourceTree = "<group>"; };
 		E1B762081E5DC68600B01E19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,11 +98,12 @@
 				E1B762131E5DC76300B01E19 /* Autoresizing.swift */,
 				E1B762141E5DC76300B01E19 /* Button.swift */,
 				E1B762151E5DC76300B01E19 /* Color.swift */,
+				E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */,
+				E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */,
 				E1B762161E5DC76300B01E19 /* Image.swift */,
+				E15424D11E828CB300EFC780 /* UIFont.swift */,
 				E1B762171E5DC76300B01E19 /* View.swift */,
 				E1B762181E5DC76300B01E19 /* Window.swift */,
-				E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */,
-				E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 				E1B762291E5DC79200B01E19 /* Print.swift in Sources */,
 				E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */,
 				E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */,
+				E15424D21E828CB300EFC780 /* UIFont.swift in Sources */,
 				E1B7621C1E5DC76300B01E19 /* Button.swift in Sources */,
 				E1B762201E5DC76300B01E19 /* Window.swift in Sources */,
 				E1B762221E5DC77100B01E19 /* BidirectionalDictionary.swift in Sources */,
