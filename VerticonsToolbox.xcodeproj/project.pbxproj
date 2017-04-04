@@ -81,6 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				E1B762081E5DC68600B01E19 /* Info.plist */,
+				E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */,
 				E1B762231E5DC79200B01E19 /* LogFileViewController.swift */,
 				E1B762241E5DC79200B01E19 /* Print.swift */,
 				E1B762261E5DC79200B01E19 /* Toolbox.storyboard */,
@@ -88,7 +89,6 @@
 				E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */,
 				E1B7620F1E5DC72400B01E19 /* UI */,
 				E1B762101E5DC73500B01E19 /* Utilities */,
-				E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */,
 			);
 			path = VerticonsToolbox;
 			sourceTree = "<group>";
