@@ -151,6 +151,12 @@ public class ElapsedTime : CustomStringConvertible {
     }
 }
 
+extension Date {
+    static func fromNow(unit: NSCalendar.Unit, value: Int) -> Date {
+        return (Calendar.current as NSCalendar).date(byAdding: unit, value: value, to: Date(), options: [])!
+    }
+}
+
 public var applicationName: String = {
     struct Name {
         static let value = Name()
