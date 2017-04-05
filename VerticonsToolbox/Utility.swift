@@ -10,7 +10,7 @@ import UserNotifications
 
 // Synchronization ****************************************************************************
 
-public func lockObject(_ object: AnyObject, andExecuteCode code: () -> Any?) -> Any? {
+public func lockObject<T>(_ object: AnyObject, andExecuteCode code: () -> T?) -> T? {
     objc_sync_enter(object)
     defer { objc_sync_exit(object) }
     return code()
