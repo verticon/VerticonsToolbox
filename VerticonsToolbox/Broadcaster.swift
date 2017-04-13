@@ -90,17 +90,3 @@ private class Wrapper<ListenerType: AnyObject, EventType> : ListenerWrapper, Lis
         broadcaster.wrappers = broadcaster.wrappers.filter { $0 !== self }
     }
 }
-
-class Listener {
-    func eventHandler(data: (String, String)) {
-        print("Hello \(data.0) \(data.1)")
-    }
-}
-
-func test() {
-let broadcaster = Broadcaster<(String, String)>()
-let listener = Listener()
-let manager = broadcaster.addListener(listener, handlerClassMethod: Listener.eventHandler)
-broadcaster.broadcast(("Chris", "Lattner"))
-manager.removeListener()
-}
