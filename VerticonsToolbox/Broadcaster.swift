@@ -37,6 +37,28 @@ open class Broadcaster<EventType> {
         }
     }
     
+    // The addListener signature might seem odd. Here is an example usage:
+    //
+    //       class Listener {
+    //           func eventHandler(data: (String, String)) {
+    //               print("Hello \(data.0) \(data.1)")
+    //           }
+    //      }
+    //
+    //      let listener = Listener()
+    //      let broadcaster = Broadcaster<(String, String)>()
+    //      let manager = broadcaster.addListener(listener, handlerClassMethod: Listener.eventHandler)
+    //      broadcaster.broadcast(("Chris", "Lattner")) // Prints "Hello Chris Lattner"
+    //      manager.removeListener()
+    //
+    // addListener is taking advantage of the fact that the invocation of a method directly upon a class type
+    // produces a curried function that has captured the class instance argument - have a look at the Wrapper's
+    // deliver method. This is, in fact, how instance methods actually work. The reason for employing this
+    // technique is to proscribe the use of closures with their inherit risk of retain cycles (do you ever forget
+    // to use a capture list such as [unowned self]?). Instead of a closure with a captured self, addListener
+    // receives the instance directly so that it can be stored weakly in the Wrapper, thus ensuring that all
+    // will be well.
+    //
     open func addListener<ListenerType: AnyObject>(_ listener: ListenerType, handlerClassMethod: @escaping (ListenerType) -> EventHandler) -> ListenerManagement {
         let wrapper = Wrapper(listener: listener, handlerClassMethod: handlerClassMethod, broadcaster: self)
         wrappers.append(wrapper)
@@ -69,3 +91,16 @@ private class Wrapper<ListenerType: AnyObject, EventType> : ListenerWrapper, Lis
     }
 }
 
+class Listener {
+    func eventHandler(data: (String, String)) {
+        print("Hello \(data.0) \(data.1)")
+    }
+}
+
+func test() {
+let broadcaster = Broadcaster<(String, String)>()
+let listener = Listener()
+let manager = broadcaster.addListener(listener, handlerClassMethod: Listener.eventHandler)
+broadcaster.broadcast(("Chris", "Lattner"))
+manager.removeListener()
+}
