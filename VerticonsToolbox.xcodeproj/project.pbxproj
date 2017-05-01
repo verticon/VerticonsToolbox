@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E10E23EE1E9BBBF100F27B67 /* Broadcaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */; };
+		E131E8661EA528BB00DC8863 /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E131E8651EA528BB00DC8863 /* CoreLocation.swift */; };
 		E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */; };
 		E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */; };
 		E15424D21E828CB300EFC780 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15424D11E828CB300EFC780 /* UIFont.swift */; };
+		E1B2E5591E8F0C6A00B6FFC1 /* Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */; };
 		E1B762091E5DC68600B01E19 /* VerticonsToolbox.h in Headers */ = {isa = PBXBuildFile; fileRef = E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762111E5DC76300B01E19 /* AlertController.swift */; };
 		E1B7621A1E5DC76300B01E19 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762121E5DC76300B01E19 /* Application.swift */; };
@@ -27,9 +30,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Broadcaster.swift; sourceTree = "<group>"; };
+		E131E8651EA528BB00DC8863 /* CoreLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreLocation.swift; sourceTree = "<group>"; };
 		E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HexadecimalKeypad.xib; path = UI/HexadecimalKeypad.xib; sourceTree = "<group>"; };
 		E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalKeypad.swift; path = UI/HexadecimalKeypad.swift; sourceTree = "<group>"; };
 		E15424D11E828CB300EFC780 /* UIFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Encodable.swift; sourceTree = "<group>"; };
 		E1B762041E5DC68600B01E19 /* VerticonsToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VerticonsToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VerticonsToolbox.h; sourceTree = "<group>"; };
 		E1B762081E5DC68600B01E19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +85,9 @@
 			isa = PBXGroup;
 			children = (
 				E1B762081E5DC68600B01E19 /* Info.plist */,
+				E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */,
+				E131E8651EA528BB00DC8863 /* CoreLocation.swift */,
+				E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */,
 				E1B762231E5DC79200B01E19 /* LogFileViewController.swift */,
 				E1B762241E5DC79200B01E19 /* Print.swift */,
 				E1B762261E5DC79200B01E19 /* Toolbox.storyboard */,
@@ -203,9 +212,12 @@
 				E1B762281E5DC79200B01E19 /* LogFileViewController.swift in Sources */,
 				E1B7621E1E5DC76300B01E19 /* Image.swift in Sources */,
 				E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */,
+				E1B2E5591E8F0C6A00B6FFC1 /* Encodable.swift in Sources */,
+				E131E8661EA528BB00DC8863 /* CoreLocation.swift in Sources */,
 				E1B7621B1E5DC76300B01E19 /* Autoresizing.swift in Sources */,
 				E1B7621D1E5DC76300B01E19 /* Color.swift in Sources */,
 				E1B7621F1E5DC76300B01E19 /* View.swift in Sources */,
+				E10E23EE1E9BBBF100F27B67 /* Broadcaster.swift in Sources */,
 				E1B762291E5DC79200B01E19 /* Print.swift in Sources */,
 				E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */,
 				E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */,

@@ -10,7 +10,7 @@ import UserNotifications
 
 // Synchronization ****************************************************************************
 
-public func lockObject(_ object: AnyObject, andExecuteCode code: () -> Any?) -> Any? {
+public func lockObject<T>(_ object: AnyObject, andExecuteCode code: () -> T?) -> T? {
     objc_sync_enter(object)
     defer { objc_sync_exit(object) }
     return code()
@@ -148,6 +148,12 @@ public class ElapsedTime : CustomStringConvertible {
     
     public var description : String {
         return timeFormatter.string(from: elapsedTime)!
+    }
+}
+
+extension Date {
+    static func fromNow(unit: NSCalendar.Unit, value: Int) -> Date {
+        return (Calendar.current as NSCalendar).date(byAdding: unit, value: value, to: Date(), options: [])!
     }
 }
 
