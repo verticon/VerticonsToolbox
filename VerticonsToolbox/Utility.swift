@@ -36,7 +36,7 @@ public var GlobalBackgroundQueue: DispatchQueue {
     return DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
 }
 
-// String / NSData **************************************************************************
+// Data **************************************************************************
 
 public func stringArrayToData(_ array: [String]) -> Data {
     let data = NSMutableData()
@@ -53,33 +53,40 @@ public func stringArrayToData(_ array: [String]) -> Data {
     return data as Data
 }
 
-public func dataToStringArray(_ data: Data) -> [String] {
-    var decodedStrings = [String]()
-    
-    var stringTerminatorPositions = [Int]()
-    
-    var currentPosition = 0
-    data.enumerateBytes() {
-        buffer, index, stop in
+public extension Data {
+    public func asHexString() -> String {
+        return self.map { String(format: "%02hhX", $0) }.joined(separator: "-")
+    }
+
+    public func asStringArray() -> [String] {
+        var decodedStrings = [String]()
         
-        for i in 0 ..< index {
-            if buffer[i] == 0 {
-                stringTerminatorPositions.append(currentPosition)
+        var stringTerminatorPositions = [Int]()
+        
+        var currentPosition = 0
+        self.enumerateBytes() {
+            buffer, index, stop in
+            
+            for i in 0 ..< index {
+                if buffer[i] == 0 {
+                    stringTerminatorPositions.append(currentPosition)
+                }
+                currentPosition += 1
             }
-            currentPosition += 1
         }
+        
+        var stringStartPosition = 0
+        for stringTerminatorPosition in stringTerminatorPositions {
+            let encodedString = self.subdata(in: stringStartPosition ..< (stringTerminatorPosition - stringStartPosition))
+            if let decodedString =  String(data: encodedString, encoding: String.Encoding.utf8) {
+                decodedStrings.append(decodedString)
+            }
+            stringStartPosition = stringTerminatorPosition + 1
+        }
+        
+        return decodedStrings
     }
     
-    var stringStartPosition = 0
-    for stringTerminatorPosition in stringTerminatorPositions {
-        let encodedString = data.subdata(in: stringStartPosition ..< (stringTerminatorPosition - stringStartPosition))
-        if let decodedString =  String(data: encodedString, encoding: String.Encoding.utf8) {
-            decodedStrings.append(decodedString)
-        }
-        stringStartPosition = stringTerminatorPosition + 1
-    }
-    
-    return decodedStrings
 }
 
 // User Notifications **************************************************************************
@@ -112,13 +119,13 @@ public func hasNotifyPermission() -> Bool {
     return currentSettings!.types.contains(.alert) && currentSettings!.types.contains(.sound)
 }
 
-public func alertUser(title: String?, body: String?) {
+public func alertUser(title: String?, body: String?, handler: ((UIAlertAction) -> Void)? = nil) {
     let alert = UIAlertController(title: title, message: body, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: handler))
     alert.display()
 }
 
-// Other **************************************************************************
+// Time and Date **************************************************************************
 
 public class LocalTime {
     fileprivate static let dateFormatter: DateFormatter = {
@@ -156,6 +163,8 @@ extension Date {
         return (Calendar.current as NSCalendar).date(byAdding: unit, value: value, to: Date(), options: [])!
     }
 }
+
+// Other **************************************************************************
 
 public var applicationName: String = {
     struct Name {
