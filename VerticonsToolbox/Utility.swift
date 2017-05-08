@@ -89,6 +89,32 @@ public extension Data {
     
 }
 
+extension Data {
+    
+    init<T>(from value: T) {
+        var value = value
+        self.init(buffer: UnsafeBufferPointer(start: &value, count: 1))
+    }
+    
+    /* From Data definition:
+     func withUnsafeBytes<ResultType, ContentType>(_ body: (UnsafePointer<ContentType>) throws -> ResultType) rethrows -> ResultType
+     */
+    func to<T>(type: T.Type) -> T {
+        return self.withUnsafeBytes { $0.pointee }
+    }
+    
+    init<T>(fromArray values: [T]) {
+        var values = values
+        self.init(buffer: UnsafeBufferPointer(start: &values, count: values.count))
+    }
+    
+    func toArray<T>(type: T.Type) -> [T] {
+        return self.withUnsafeBytes {
+            [T](UnsafeBufferPointer(start: $0, count: self.count/MemoryLayout<T>.stride))
+        }
+    }
+}
+
 // User Notifications **************************************************************************
 /*
  let content = UNMutableNotificationContent()
