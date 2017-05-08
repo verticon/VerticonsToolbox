@@ -46,7 +46,6 @@ public protocol HexadecimalKeypadDelegate : class {
 }
 
 public class HexadecimalKeypad: UIView {
-    
 
     @IBOutlet private var view: UIView!
 
@@ -80,6 +79,12 @@ public class HexadecimalKeypad: UIView {
     public static func setup(forTextField: UITextField, withDelegate: HexadecimalKeypadDelegate) {
         let inputView = HexadecimalKeypad(frame: CGRect(x: 0, y: 0, width: 0, height: 300))
         forTextField.inputView = inputView
+        inputView.delegate = withDelegate
+    }
+
+    public static func setup(forTextView: UITextView, withDelegate: HexadecimalKeypadDelegate) {
+        let inputView = HexadecimalKeypad(frame: CGRect(x: 0, y: 0, width: 0, height: 300))
+        forTextView.inputView = inputView
         inputView.delegate = withDelegate
     }
 }
