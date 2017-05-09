@@ -40,58 +40,61 @@ public var GlobalBackgroundQueue: DispatchQueue {
 
 public func stringArrayToData(_ array: [String]) -> Data {
     let data = NSMutableData()
-    let terminator = [0]
-    for string in array {
-        if let encodedString = string.data(using: String.Encoding.utf8) {
-            data.append(encodedString)
-            data.append(terminator, length: 1)
-        }
-        else {
-            NSLog("Cannot encode string \"\(string)\"")
-        }
+    array.forEach {
+        data.append($0.data(using: String.Encoding.utf8)!)
+        data.append([0], length: 1)
     }
     return data as Data
 }
 
 public extension Data {
-    public func asHexString() -> String {
+
+    public init(with: String, using: String.Encoding = .utf8) {
+        self.init()
+        self.append(with.data(using: using)!)
+        self.append(0)
+    }
+    
+    public init(with: [String], using: String.Encoding = .utf8) {
+        self.init()
+        with.forEach { self.append(Data(with: $0, using: using)) }
+    }
+    
+    public func toString(encoding: String.Encoding = .utf8) -> String {
+        return String(data: self, encoding: encoding)!
+    }
+            
+    public func toStringArray(encoding: String.Encoding = .utf8) -> [String] {
+        
+        return withUnsafeBytes { (ptr: UnsafePointer<Int8>) in
+            
+            var strings = [String]()
+            
+            var start = ptr
+            for offset in 0 ..< self.count {
+                
+                let current = ptr + offset
+                
+                if current != start && current.pointee == 0 {
+                    // if we cannot decode the string, append a unicode replacement character
+                    // feel free to handle this another way.
+                    strings.append(String(cString: start, encoding: encoding) ?? "\u{FFFD}")
+                    start = current + 1
+                }
+            }
+            
+            return strings
+        }
+    }
+    
+    public func toHexString() -> String {
         return self.map { String(format: "%02hhX", $0) }.joined(separator: "-")
     }
-
-    public func asStringArray() -> [String] {
-        var decodedStrings = [String]()
-        
-        var stringTerminatorPositions = [Int]()
-        
-        var currentPosition = 0
-        self.enumerateBytes() {
-            buffer, index, stop in
-            
-            for i in 0 ..< index {
-                if buffer[i] == 0 {
-                    stringTerminatorPositions.append(currentPosition)
-                }
-                currentPosition += 1
-            }
-        }
-        
-        var stringStartPosition = 0
-        for stringTerminatorPosition in stringTerminatorPositions {
-            let encodedString = self.subdata(in: stringStartPosition ..< (stringTerminatorPosition - stringStartPosition))
-            if let decodedString =  String(data: encodedString, encoding: String.Encoding.utf8) {
-                decodedStrings.append(decodedString)
-            }
-            stringStartPosition = stringTerminatorPosition + 1
-        }
-        
-        return decodedStrings
-    }
-    
 }
 
-extension Data {
+public extension Data {
     
-    init<T>(from value: T) {
+    public init<T>(from value: T) {
         var value = value
         self.init(buffer: UnsafeBufferPointer(start: &value, count: 1))
     }
@@ -99,16 +102,16 @@ extension Data {
     /* From Data definition:
      func withUnsafeBytes<ResultType, ContentType>(_ body: (UnsafePointer<ContentType>) throws -> ResultType) rethrows -> ResultType
      */
-    func to<T>(type: T.Type) -> T {
+    public func to<T>(type: T.Type) -> T {
         return self.withUnsafeBytes { $0.pointee }
     }
     
-    init<T>(fromArray values: [T]) {
+    public init<T>(fromArray values: [T]) {
         var values = values
         self.init(buffer: UnsafeBufferPointer(start: &values, count: values.count))
     }
     
-    func toArray<T>(type: T.Type) -> [T] {
+    public func toArray<T>(type: T.Type) -> [T] {
         return self.withUnsafeBytes {
             [T](UnsafeBufferPointer(start: $0, count: self.count/MemoryLayout<T>.stride))
         }
