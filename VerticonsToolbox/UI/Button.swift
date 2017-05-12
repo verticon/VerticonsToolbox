@@ -7,6 +7,17 @@
 
 import UIKit
 
+public extension UIButton {
+    public func setBackgroundColor(_ color: UIColor?, forState state: UIControlState) {
+        if let color = color {
+            setBackgroundImage(color.toImage(), for: state)
+        }
+        else {
+            setBackgroundImage(nil, for: state)
+        }
+    }
+}
+
 @IBDesignable
 open class ColoredButton: UIButton {
     @IBInspectable open var color: UIColor? {
@@ -52,17 +63,6 @@ open class ToggleButton: ColoredButton {
     open func toggle() {
         isSelected = !isSelected
         if let listener = listener { listener(isSelected) }
-    }
-}
-
-public extension UIButton {
-    public func setBackgroundColor(_ color: UIColor?, forState state: UIControlState) {
-        if let color = color {
-            setBackgroundImage(color.toImage(), for: state)
-        }
-        else {
-            setBackgroundImage(nil, for: state)
-        }
     }
 }
 
@@ -192,5 +192,178 @@ public class RadioButton: UIButton {
         didSet {
             setFillState()
         }
+    }
+}
+
+@IBDesignable
+public class DropDownButton: UIButton {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initialize()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initialize()
+    }
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        initialize()
+    }
+    
+    fileprivate func initialize() {
+        if image(for: .normal) == nil {
+            if let image = UIImage(named: "DropDown", in: Bundle(for: DropDownButton.self), compatibleWith: nil) {
+                setImage(image, for: .normal)
+            }
+        }
+        
+        addTarget(self, action: #selector(toggle), for: .touchUpInside)
+        
+        sizeToFit()
+    }
+    
+    public override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
+        if var imageFrame = imageView?.frame, var labelFrame = titleLabel?.frame, let count = titleLabel?.text?.characters.count {
+            
+            if (count > 0) {
+                labelFrame.origin.x = contentEdgeInsets.left
+                imageFrame.origin.x = labelFrame.origin.x + labelFrame.width + 2
+                
+                imageView?.frame = imageFrame
+                titleLabel?.frame = labelFrame
+            }
+            
+        }
+    }
+    
+    public override func setTitle(_ title: String?, for state: UIControlState) {
+        super.setTitle(title, for: state)
+        sizeToFit()
+    }
+    
+    public var collapsed: Bool {
+        return imageView?.transform == CGAffineTransform.identity
+    }
+    
+    public var expanded: Bool {
+        return !collapsed
+    }
+    
+    fileprivate func collapse() {
+        imageView?.transform = CGAffineTransform.identity
+    }
+    
+    private func expand() {
+        imageView?.transform = CGAffineTransform(rotationAngle: .pi)
+    }
+    
+    @objc fileprivate func toggle(sender: UIButton) {
+        if collapsed { expand() } else { collapse() }
+    }
+}
+
+public class DropDownMenuButton: DropDownButton, UIPopoverPresentationControllerDelegate {
+    
+    private class Menu {
+        let items: [CustomStringConvertible]
+        var selection: Int {
+            didSet {
+                selectionChangedHandler(items[selection])
+            }
+        }
+        let selectionChangedHandler: ((CustomStringConvertible) -> Void)
+        
+        init(items: [CustomStringConvertible], initialSelection: Int, selectionChangedHandler: @escaping ((CustomStringConvertible) -> Void)) {
+            self.items = items
+            self.selection = initialSelection
+            self.selectionChangedHandler = selectionChangedHandler
+        }
+    }
+    
+    private class MenuViewController: UITableViewController {
+        
+        var menu: Menu!
+        let cellId = "MenuCell"
+        
+        override func viewDidLoad() {
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        }
+        
+        override func numberOfSections(in tableView: UITableView) -> Int {
+            return 1
+        }
+        
+        override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            return menu.items.count
+        }
+        
+        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+            cell.textLabel?.text = menu.items[indexPath.row].description
+            cell.accessoryType = indexPath.item == menu.selection ? .checkmark : .none
+            return cell
+        }
+        
+        override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            menu.selection = indexPath.item
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    private var menu: Menu?
+    
+    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionChangedHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
+        guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return false }
+        
+        menu = Menu(items: items, initialSelection: initialSelection, selectionChangedHandler: {
+            self.collapse()
+            self.setTitle($0.description, for: .normal)
+            
+            selectionChangedHandler($0)
+        })
+        
+        setTitle(menu!.items[menu!.selection].description, for: .normal)
+        
+        return true
+    }
+    
+    fileprivate override func initialize() {
+        super.initialize()
+        setTitle("<no items>", for: .normal)
+    }
+    
+    @objc fileprivate override func toggle(sender: UIButton) {
+        super.toggle(sender: sender)
+        
+        if collapsed { return }
+        
+        guard let menu = self.menu else { return }
+        
+        let menuVC = MenuViewController()
+        menuVC.menu = menu
+        menuVC.modalPresentationStyle = .popover
+        menuVC.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
+        let popoverController = menuVC.popoverPresentationController!
+        popoverController.sourceView = self
+        popoverController.delegate = self
+        
+        self.viewController?.present(menuVC, animated: true, completion: nil)
+    }
+    
+    // MARK: UIPopoverPresentationControllerDelegate
+    
+    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    public func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        collapse()
+        return true
     }
 }
