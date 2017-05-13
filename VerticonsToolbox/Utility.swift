@@ -38,15 +38,7 @@ public var GlobalBackgroundQueue: DispatchQueue {
 
 // Data **************************************************************************
 
-public func stringArrayToData(_ array: [String]) -> Data {
-    let data = NSMutableData()
-    array.forEach {
-        data.append($0.data(using: String.Encoding.utf8)!)
-        data.append([0], length: 1)
-    }
-    return data as Data
-}
-
+// TODO: Rethink the forced unwrapping of the String initializers
 public extension Data {
 
     public init(with: String, using: String.Encoding = .utf8) {
@@ -87,8 +79,8 @@ public extension Data {
         }
     }
     
-    public func toHexString() -> String {
-        return self.map { String(format: "%02hhX", $0) }.joined(separator: "-")
+    public func toHexString(seperator: String) -> String {
+        return self.map { String(format: "%02hhX", $0) }.joined(separator: seperator)
     }
 }
 
