@@ -268,28 +268,36 @@ public class DropDownButton: UIButton {
     }
 }
 
-public class DropDownMenuButton: DropDownButton, UIPopoverPresentationControllerDelegate {
+public class DropDownListButton: DropDownButton, UIPopoverPresentationControllerDelegate {
     
-    private class Menu {
+    private class List {
         let items: [CustomStringConvertible]
-        var selection: Int {
-            didSet {
-                selectionChangedHandler(items[selection])
-            }
-        }
-        let selectionChangedHandler: ((CustomStringConvertible) -> Void)
-        
-        init(items: [CustomStringConvertible], initialSelection: Int, selectionChangedHandler: @escaping ((CustomStringConvertible) -> Void)) {
+
+        init(items: [CustomStringConvertible]) {
             self.items = items
-            self.selection = initialSelection
-            self.selectionChangedHandler = selectionChangedHandler
         }
     }
     
-    private class MenuViewController: UITableViewController {
+    private class Menu : List{
+        var selection: Int {
+            didSet {
+                selectionHandler(items[selection])
+            }
+        }
+        let selectionHandler: ((CustomStringConvertible) -> Void)
         
-        var menu: Menu!
-        let cellId = "MenuCell"
+        init(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) {
+            self.selection = initialSelection
+            self.selectionHandler = selectionHandler
+
+            super.init(items: items)
+        }
+    }
+    
+    private class ListViewController: UITableViewController {
+        
+        var list: List!
+        private let cellId = "ListCell"
         
         override func viewDidLoad() {
             tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
@@ -300,36 +308,52 @@ public class DropDownMenuButton: DropDownButton, UIPopoverPresentationController
         }
         
         override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return menu.items.count
+            return list.items.count
         }
         
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-            cell.textLabel?.text = menu.items[indexPath.row].description
-            cell.accessoryType = indexPath.item == menu.selection ? .checkmark : .none
+            cell.textLabel?.text = list.items[indexPath.row].description
+            if let menu = list as? Menu {
+                cell.accessoryType = indexPath.item == menu.selection ? .checkmark : .none
+            }
             return cell
         }
         
         override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            menu.selection = indexPath.item
-            self.dismiss(animated: true, completion: nil)
+            if let menu = list as? Menu {
+                menu.selection = indexPath.item
+                self.dismiss(animated: true, completion: nil)
+            }
+            else {
+                tableView.deselectRow(at: indexPath, animated: false)
+            }
         }
     }
     
-    private var menu: Menu?
+    private var list: List?
     
-    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionChangedHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
+    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
         guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return false }
         
-        menu = Menu(items: items, initialSelection: initialSelection, selectionChangedHandler: {
+        list = Menu(items: items, initialSelection: initialSelection, selectionHandler: {
+            
             self.collapse()
             self.setTitle($0.description, for: .normal)
             
-            selectionChangedHandler($0)
+            selectionHandler($0)
         })
         
-        setTitle(menu!.items[menu!.selection].description, for: .normal)
+        setTitle(list!.items[initialSelection].description, for: .normal)
         
+        return true
+    }
+    
+    public func setList(items: [CustomStringConvertible]) -> Bool {
+        guard items.count > 0 else { return false }
+        
+        list = List(items: items)
+    
         return true
     }
     
@@ -343,17 +367,17 @@ public class DropDownMenuButton: DropDownButton, UIPopoverPresentationController
         
         if collapsed { return }
         
-        guard let menu = self.menu else { return }
+        guard let list = self.list else { return }
         
-        let menuVC = MenuViewController()
-        menuVC.menu = menu
-        menuVC.modalPresentationStyle = .popover
-        menuVC.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
-        let popoverController = menuVC.popoverPresentationController!
+        let listVC = ListViewController()
+        listVC.list = list
+        listVC.modalPresentationStyle = .popover
+        listVC.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
+        let popoverController = listVC.popoverPresentationController!
         popoverController.sourceView = self
         popoverController.delegate = self
         
-        self.viewController?.present(menuVC, animated: true, completion: nil)
+        self.viewController?.present(listVC, animated: true, completion: nil)
     }
     
     // MARK: UIPopoverPresentationControllerDelegate
