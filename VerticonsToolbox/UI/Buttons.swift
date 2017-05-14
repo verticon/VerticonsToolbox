@@ -196,7 +196,7 @@ public class RadioButton: UIButton {
 }
 
 @IBDesignable
-public class DropDownButton: UIButton {
+public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -263,12 +263,41 @@ public class DropDownButton: UIButton {
     
     @objc fileprivate func toggle(sender: UIButton) {
         if collapsed { expand() } else { collapse() }
+
+        if collapsed { return }
+        
+        guard let viewController = getPopoverViewController() else { return }
+        
+        viewController.modalPresentationStyle = .popover
+        viewController.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
+        let presentationController = viewController.popoverPresentationController!
+        presentationController.delegate = self
+        if let barButton = container { presentationController.barButtonItem = barButton } else { presentationController.sourceView = self.imageView }
+        self.viewController?.present(viewController, animated: true, completion: nil)
+    }
+
+    fileprivate func getPopoverViewController() -> UIViewController? {
+        return nil
+    }
+
+    fileprivate var container: DropDownBarButton? // Is this button the custom view of a bar button item (see UIBarButtonItem subclasses below)
+
+    // MARK: UIPopoverPresentationControllerDelegate
+    
+    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    
+    public func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        collapse()
+        return true
     }
 }
 
-public class DropDownListButton: DropDownButton, UIPopoverPresentationControllerDelegate {
+@IBDesignable
+public class DropDownListButton: DropDownButton {
     
-    private class List {
+    fileprivate class List {
         let items: [CustomStringConvertible]
 
         init(items: [CustomStringConvertible]) {
@@ -276,27 +305,20 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
         }
     }
     
-    private class Menu : List{
-        var selection: Int {
-            didSet {
-                selectionHandler(items[selection])
-            }
-        }
-        let selectionHandler: ((CustomStringConvertible) -> Void)
+    fileprivate class ListViewController: UITableViewController {
         
-        init(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) {
-            self.selection = initialSelection
-            self.selectionHandler = selectionHandler
-
-            super.init(items: items)
-        }
-    }
-    
-    private class ListViewController: UITableViewController {
-        
-        var list: List!
+        private var list: List
         private let cellId = "ListCell"
         
+        init(list: List) {
+            self.list = list
+            super.init(style: .plain)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
         override func viewDidLoad() {
             tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         }
@@ -312,25 +334,16 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
             cell.textLabel?.text = list.items[indexPath.row].description
-            if let menu = list as? Menu {
-                cell.accessoryType = indexPath.item == menu.selection ? .checkmark : .none
-            }
             return cell
         }
         
         override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            if let menu = list as? Menu {
-                menu.selection = indexPath.item
-                self.dismiss(animated: true, completion: nil)
-            }
-            else {
-                tableView.deselectRow(at: indexPath, animated: false)
-            }
+            tableView.deselectRow(at: indexPath, animated: false)
         }
     }
     
     private var list: List?
-    
+
     public func setList(items: [CustomStringConvertible]) -> Bool {
         guard items.count > 0 else { return false }
         
@@ -339,10 +352,67 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
         return true
     }
     
+    fileprivate override func getPopoverViewController() -> UIViewController? {
+        guard let list = self.list else { return nil }
+        return ListViewController(list: list)
+    }
+}
+
+@IBDesignable
+public class DropDownMenuButton: DropDownButton {
+
+    private class Menu : DropDownListButton.List {
+        var selection: Int {
+            didSet {
+                selectionHandler(items[selection])
+            }
+        }
+        let selectionHandler: ((CustomStringConvertible) -> Void)
+        
+        init(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) {
+            self.selection = initialSelection
+            self.selectionHandler = selectionHandler
+            
+            super.init(items: items)
+        }
+    }
+    
+    private class MenuViewController: DropDownListButton.ListViewController {
+        
+        private var menu: Menu
+
+        init(menu: Menu) {
+            self.menu = menu
+            super.init(list: menu)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let cell = super.tableView(tableView, cellForRowAt: indexPath)
+            cell.accessoryType = indexPath.item == menu.selection ? .checkmark : .none
+            return cell
+        }
+        
+        override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            menu.selection = indexPath.item
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    private var menu: Menu?
+
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        setTitle("Menu", for: .normal)
+    }
+    
     public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
         guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return false }
         
-        list = Menu(items: items, initialSelection: initialSelection, selectionHandler: {
+        menu = Menu(items: items, initialSelection: initialSelection, selectionHandler: {
             
             self.collapse()
             self.setTitle($0.description, for: .normal)
@@ -350,41 +420,17 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
             selectionHandler($0)
         })
         
-        setTitle(list!.items[initialSelection].description, for: .normal)
+        setTitle(menu!.items[initialSelection].description, for: .normal)
         
         return true
     }
-    
-    @objc fileprivate override func toggle(sender: UIButton) {
-        super.toggle(sender: sender)
-        
-        if collapsed { return }
-        
-        guard let list = self.list else { return }
-        
-        let listVC = ListViewController()
-        listVC.list = list
-        listVC.modalPresentationStyle = .popover
-        listVC.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
-        let popoverController = listVC.popoverPresentationController!
-        popoverController.delegate = self
-        if let button = barButtonItem { popoverController.barButtonItem = button } else { popoverController.sourceView = self }
-        self.viewController?.present(listVC, animated: true, completion: nil)
-    }
-    
-    fileprivate var barButtonItem: UIBarButtonItem?
 
-    // MARK: UIPopoverPresentationControllerDelegate
-    
-    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
-    }
-    
-    public func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
-        collapse()
-        return true
+    fileprivate override func getPopoverViewController() -> UIViewController? {
+        guard let menu = self.menu else { return nil }
+        return MenuViewController(menu: menu)
     }
 }
+
 
 public class DropDownBarButton: UIBarButtonItem {
     
@@ -399,29 +445,36 @@ public class DropDownBarButton: UIBarButtonItem {
     }
     
     fileprivate func initialize() {
-        customView = DropDownButton()
-    }
-}
-
-public class DropDownListBarButton: UIBarButtonItem {
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initialize()
-    }
-    
-    fileprivate func initialize() {
-        let button = DropDownListButton()
-        button.barButtonItem = self
+        let button = makeButton()
+        button.container = self
         customView = button
     }
+
+    fileprivate func makeButton() -> DropDownButton {
+        return DropDownButton()
+    }
     
+}
+
+public class DropDownListBarButton: DropDownBarButton {
+    
+    fileprivate override func makeButton() -> DropDownButton {
+        return DropDownListButton()
+    }
+
     public func setList(items: [CustomStringConvertible]) -> Bool {
         return (customView as! DropDownListButton).setList(items: items)
     }
+}
+
+public class DropDownMenuBarButton: DropDownBarButton {
+    
+    fileprivate override func makeButton() -> DropDownButton {
+        return DropDownMenuButton()
+    }
     
     public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
-        return (customView as! DropDownListButton).setMenu(items: items, initialSelection: initialSelection, selectionHandler: selectionHandler)
+        return (customView as! DropDownMenuButton).setMenu(items: items, initialSelection: initialSelection, selectionHandler: selectionHandler)
     }
 }
 
