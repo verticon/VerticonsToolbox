@@ -1,7 +1,7 @@
 //
-//  BackgroundColorButton.swift
+//  Buttons.swift
 //
-//  Created by Robert Vaessen on 12/16/15.
+//  Created by Robert Vaessen on 4/15/17.
 //  Copyright © 2015 Robert Vaessen. All rights reserved.
 //
 
@@ -215,9 +215,7 @@ public class DropDownButton: UIButton {
     
     fileprivate func initialize() {
         if image(for: .normal) == nil {
-            if let image = UIImage(named: "DropDown", in: Bundle(for: DropDownButton.self), compatibleWith: nil) {
-                setImage(image, for: .normal)
-            }
+            setImage(UIImage(named: "DropDown", in: Bundle(for: DropDownButton.self), compatibleWith: nil), for: .normal)
         }
         
         addTarget(self, action: #selector(toggle), for: .touchUpInside)
@@ -333,6 +331,14 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
     
     private var list: List?
     
+    public func setList(items: [CustomStringConvertible]) -> Bool {
+        guard items.count > 0 else { return false }
+        
+        list = List(items: items)
+        
+        return true
+    }
+    
     public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
         guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return false }
         
@@ -349,19 +355,6 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
         return true
     }
     
-    public func setList(items: [CustomStringConvertible]) -> Bool {
-        guard items.count > 0 else { return false }
-        
-        list = List(items: items)
-    
-        return true
-    }
-    
-    fileprivate override func initialize() {
-        super.initialize()
-        setTitle("<no items>", for: .normal)
-    }
-    
     @objc fileprivate override func toggle(sender: UIButton) {
         super.toggle(sender: sender)
         
@@ -374,12 +367,13 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
         listVC.modalPresentationStyle = .popover
         listVC.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
         let popoverController = listVC.popoverPresentationController!
-        popoverController.sourceView = self
         popoverController.delegate = self
-        
+        if let button = barButtonItem { popoverController.barButtonItem = button } else { popoverController.sourceView = self }
         self.viewController?.present(listVC, animated: true, completion: nil)
     }
     
+    fileprivate var barButtonItem: UIBarButtonItem?
+
     // MARK: UIPopoverPresentationControllerDelegate
     
     public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -391,3 +385,43 @@ public class DropDownListButton: DropDownButton, UIPopoverPresentationController
         return true
     }
 }
+
+public class DropDownBarButton: UIBarButtonItem {
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initialize()
+    }
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        initialize()
+    }
+    
+    fileprivate func initialize() {
+        customView = DropDownButton()
+    }
+}
+
+public class DropDownListBarButton: UIBarButtonItem {
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initialize()
+    }
+    
+    fileprivate func initialize() {
+        let button = DropDownListButton()
+        button.barButtonItem = self
+        customView = button
+    }
+    
+    public func setList(items: [CustomStringConvertible]) -> Bool {
+        return (customView as! DropDownListButton).setList(items: items)
+    }
+    
+    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
+        return (customView as! DropDownListButton).setMenu(items: items, initialSelection: initialSelection, selectionHandler: selectionHandler)
+    }
+}
+
