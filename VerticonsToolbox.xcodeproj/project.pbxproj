@@ -28,6 +28,7 @@
 		E1B7622B1E5DC79200B01E19 /* Toolbox.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1B762261E5DC79200B01E19 /* Toolbox.storyboard */; };
 		E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762271E5DC79200B01E19 /* Utility.swift */; };
 		E1D0C39E1EC5F39F00A07D54 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1D0C39D1EC5F39F00A07D54 /* Media.xcassets */; };
+		E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F84E8E1EC8FABD00E9D924 /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		E1B762261E5DC79200B01E19 /* Toolbox.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Toolbox.storyboard; sourceTree = "<group>"; };
 		E1B762271E5DC79200B01E19 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		E1D0C39D1EC5F39F00A07D54 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = VerticonsToolbox/Media.xcassets; sourceTree = "<group>"; };
+		E1F84E8E1EC8FABD00E9D924 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */,
 				E1B7620F1E5DC72400B01E19 /* UI */,
 				E1B762101E5DC73500B01E19 /* Utilities */,
+				E1F84E8E1EC8FABD00E9D924 /* String.swift */,
 			);
 			path = VerticonsToolbox;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				E10E23EE1E9BBBF100F27B67 /* Broadcaster.swift in Sources */,
 				E1B762291E5DC79200B01E19 /* Print.swift in Sources */,
 				E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */,
+				E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */,
 				E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */,
 				E15424D21E828CB300EFC780 /* UIFont.swift in Sources */,
 				E1B7621C1E5DC76300B01E19 /* Buttons.swift in Sources */,
