@@ -245,6 +245,10 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         sizeToFit()
     }
     
+    public func trigger() {
+        toggle(sender: self)
+    }
+    
     public var collapsed: Bool {
         return imageView?.transform == CGAffineTransform.identity
     }
@@ -272,7 +276,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         viewController.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
         let presentationController = viewController.popoverPresentationController!
         presentationController.delegate = self
-        if let barButton = container { presentationController.barButtonItem = barButton } else { presentationController.sourceView = self.imageView }
+        if let barButton = outerButton { presentationController.barButtonItem = barButton } else { presentationController.sourceView = self.imageView }
         self.viewController?.present(viewController, animated: true, completion: nil)
     }
 
@@ -280,7 +284,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         return nil
     }
 
-    fileprivate var container: DropDownBarButton? // Is this button the custom view of a bar button item (see UIBarButtonItem subclasses below)
+    fileprivate var outerButton: DropDownBarButton? // This button might be the custom view of a bar button item (see the UIBarButtonItem subclasses below)
 
     // MARK: UIPopoverPresentationControllerDelegate
     
@@ -344,12 +348,12 @@ public class DropDownListButton: DropDownButton {
     
     private var list: List?
 
-    public func setList(items: [CustomStringConvertible]) -> Bool {
-        guard items.count > 0 else { return false }
+    public func setList(items: [CustomStringConvertible]) -> Self? {
+        guard items.count > 0 else { return nil }
         
         list = List(items: items)
         
-        return true
+        return self
     }
     
     fileprivate override func getPopoverViewController() -> UIViewController? {
@@ -409,8 +413,8 @@ public class DropDownMenuButton: DropDownButton {
         setTitle("Menu", for: .normal)
     }
     
-    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
-        guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return false }
+    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Self? {
+        guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return nil }
         
         menu = Menu(items: items, initialSelection: initialSelection, selectionHandler: {
             
@@ -422,7 +426,7 @@ public class DropDownMenuButton: DropDownButton {
         
         setTitle(menu!.items[initialSelection].description, for: .normal)
         
-        return true
+        return self
     }
 
     fileprivate override func getPopoverViewController() -> UIViewController? {
@@ -445,36 +449,31 @@ public class DropDownBarButton: UIBarButtonItem {
     }
     
     fileprivate func initialize() {
-        let button = makeButton()
-        button.container = self
-        customView = button
+        innerButton.outerButton = self
+        customView = innerButton
     }
 
-    fileprivate func makeButton() -> DropDownButton {
-        return DropDownButton()
-    }
-    
+    private let _innerButton = DropDownButton()
+    fileprivate var innerButton: DropDownButton { return _innerButton }
 }
 
 public class DropDownListBarButton: DropDownBarButton {
     
-    fileprivate override func makeButton() -> DropDownButton {
-        return DropDownListButton()
+    public func setList(items: [CustomStringConvertible]) -> Self? {
+        return innerButton.setList(items: items) == nil ? nil : self
     }
 
-    public func setList(items: [CustomStringConvertible]) -> Bool {
-        return (customView as! DropDownListButton).setList(items: items)
-    }
+    private let _innerButton = DropDownListButton()
+    fileprivate override var innerButton: DropDownListButton { return _innerButton }
 }
 
 public class DropDownMenuBarButton: DropDownBarButton {
     
-    fileprivate override func makeButton() -> DropDownButton {
-        return DropDownMenuButton()
+    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Self? {
+        return innerButton.setMenu(items: items, initialSelection: initialSelection, selectionHandler: selectionHandler) == nil ? nil : self
     }
-    
-    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Bool {
-        return (customView as! DropDownMenuButton).setMenu(items: items, initialSelection: initialSelection, selectionHandler: selectionHandler)
-    }
+
+    private let _innerButton = DropDownMenuButton()
+    fileprivate override var innerButton: DropDownMenuButton { return _innerButton }
 }
 
