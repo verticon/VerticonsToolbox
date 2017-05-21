@@ -27,6 +27,8 @@
 		E1B762291E5DC79200B01E19 /* Print.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762241E5DC79200B01E19 /* Print.swift */; };
 		E1B7622B1E5DC79200B01E19 /* Toolbox.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1B762261E5DC79200B01E19 /* Toolbox.storyboard */; };
 		E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762271E5DC79200B01E19 /* Utility.swift */; };
+		E1BED7741ECC6FC7004A32D0 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BED7731ECC6FC7004A32D0 /* Data.swift */; };
+		E1BED7761ECDFA08004A32D0 /* Switches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BED7751ECDFA08004A32D0 /* Switches.swift */; };
 		E1D0C39E1EC5F39F00A07D54 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1D0C39D1EC5F39F00A07D54 /* Media.xcassets */; };
 		E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F84E8E1EC8FABD00E9D924 /* String.swift */; };
 /* End PBXBuildFile section */
@@ -54,6 +56,8 @@
 		E1B762241E5DC79200B01E19 /* Print.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Print.swift; sourceTree = "<group>"; };
 		E1B762261E5DC79200B01E19 /* Toolbox.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Toolbox.storyboard; sourceTree = "<group>"; };
 		E1B762271E5DC79200B01E19 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		E1BED7731ECC6FC7004A32D0 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		E1BED7751ECDFA08004A32D0 /* Switches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Switches.swift; path = UI/Switches.swift; sourceTree = "<group>"; };
 		E1D0C39D1EC5F39F00A07D54 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = VerticonsToolbox/Media.xcassets; sourceTree = "<group>"; };
 		E1F84E8E1EC8FABD00E9D924 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -92,6 +96,7 @@
 				E1B762081E5DC68600B01E19 /* Info.plist */,
 				E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */,
 				E131E8651EA528BB00DC8863 /* CoreLocation.swift */,
+				E1BED7731ECC6FC7004A32D0 /* Data.swift */,
 				E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */,
 				E1B762231E5DC79200B01E19 /* LogFileViewController.swift */,
 				E1B762241E5DC79200B01E19 /* Print.swift */,
@@ -116,6 +121,7 @@
 				E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */,
 				E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */,
 				E1B762161E5DC76300B01E19 /* Image.swift */,
+				E1BED7751ECDFA08004A32D0 /* Switches.swift */,
 				E15424D11E828CB300EFC780 /* UIFont.swift */,
 				E1B762171E5DC76300B01E19 /* View.swift */,
 				E1B762181E5DC76300B01E19 /* Window.swift */,
@@ -230,7 +236,9 @@
 				E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */,
 				E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */,
 				E15424D21E828CB300EFC780 /* UIFont.swift in Sources */,
+				E1BED7761ECDFA08004A32D0 /* Switches.swift in Sources */,
 				E1B7621C1E5DC76300B01E19 /* Buttons.swift in Sources */,
+				E1BED7741ECC6FC7004A32D0 /* Data.swift in Sources */,
 				E1B762201E5DC76300B01E19 /* Window.swift in Sources */,
 				E1B762221E5DC77100B01E19 /* BidirectionalDictionary.swift in Sources */,
 			);
