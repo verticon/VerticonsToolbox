@@ -54,7 +54,7 @@ open class Broadcaster<EventType> {
     // addListener is taking advantage of the fact that the invocation of a method directly upon a class type
     // produces a curried function that has captured the class instance argument - have a look at the Wrapper's
     // deliver method. This is, in fact, how instance methods actually work. The reason for employing this
-    // technique is to proscribe the use of closures with their inherit risk of retain cycles (do you ever forget
+    // technique is to proscribe the use of closures with their inherent risk of retain cycles (do you ever forget
     // to use a capture list such as [unowned self]?). Instead of a closure with a captured self, addListener
     // receives the instance directly so that it can be stored weakly in the Wrapper, thus ensuring that all
     // will be well.

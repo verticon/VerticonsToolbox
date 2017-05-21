@@ -48,7 +48,7 @@ public extension String.Encoding {
     }()
 
     /// A textual name for this encoding
-    var name: String? {
+    public var name: String? {
         for wrapper in String.Encoding.all {
             if self == wrapper.encoding {
                 return wrapper.name
@@ -58,7 +58,7 @@ public extension String.Encoding {
     }
 
     /// The index of this encoding in the String.Encoding.all array
-    var index: Int? {
+    public var index: Int? {
         for index in 0 ..< String.Encoding.all.count {
             if self == String.Encoding.all[index].encoding {
                 return index
