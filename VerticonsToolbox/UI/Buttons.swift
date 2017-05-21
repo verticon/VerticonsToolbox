@@ -195,9 +195,32 @@ public class RadioButton: UIButton {
     }
 }
 
+public class RadioButtonGroup {
+    private let group: [RadioButton]
+    private let handler: (RadioButton) -> Void
+    
+    public init(buttons: RadioButton ..., selectionHandler: @escaping (RadioButton) -> Void) {
+        group = buttons
+        handler = selectionHandler
+
+        group.forEach {
+            $0.addTarget(self, action: #selector(selectionHandler(_:)), for: .touchUpInside)
+        }
+    }
+    
+    @objc private func selectionHandler(_ sender: RadioButton) {
+        let wasSelected = sender.isSelected
+        group.forEach { $0.isSelected = false }
+        sender.isSelected = true
+        if !wasSelected { handler(sender) }
+    }
+}
+
 @IBDesignable
 public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
     
+    private var popoverViewController: UIViewController?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         initialize()
@@ -221,6 +244,15 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         addTarget(self, action: #selector(toggle), for: .touchUpInside)
         
         sizeToFit()
+    }
+    
+    // If the popover has been presented and then the button's view controller is dismissed due to an event other
+    //  than a screen touch, the popover will stay on the screen. Let's detect that and dismiss the popover if it occurs
+    public override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        if superview == nil, let popover = popoverViewController {
+            popover.dismiss(animated: true, completion: nil)
+        }
     }
     
     public override func layoutSubviews() {
@@ -270,17 +302,19 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
 
         if collapsed { return }
         
-        guard let viewController = getPopoverViewController() else { return }
-        
+        guard let viewController = makePopoverViewController() else { return }
+
         viewController.modalPresentationStyle = .popover
         viewController.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
         let presentationController = viewController.popoverPresentationController!
         presentationController.delegate = self
         if let barButton = outerButton { presentationController.barButtonItem = barButton } else { presentationController.sourceView = self.imageView }
         self.viewController?.present(viewController, animated: true, completion: nil)
+
+        popoverViewController = viewController
     }
 
-    fileprivate func getPopoverViewController() -> UIViewController? {
+    fileprivate func makePopoverViewController() -> UIViewController? {
         return nil
     }
 
@@ -293,6 +327,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
     }
     
     public func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        popoverViewController = nil
         collapse()
         return true
     }
@@ -356,7 +391,7 @@ public class DropDownListButton: DropDownButton {
         return self
     }
     
-    fileprivate override func getPopoverViewController() -> UIViewController? {
+    fileprivate override func makePopoverViewController() -> UIViewController? {
         guard let list = self.list else { return nil }
         return ListViewController(list: list)
     }
@@ -379,6 +414,11 @@ public class DropDownMenuButton: DropDownButton {
             
             super.init(items: items)
         }
+
+        public var selectedItem: CustomStringConvertible {
+            return items[selection]
+        }
+        
     }
     
     private class MenuViewController: DropDownListButton.ListViewController {
@@ -429,12 +469,15 @@ public class DropDownMenuButton: DropDownButton {
         return self
     }
 
-    fileprivate override func getPopoverViewController() -> UIViewController? {
+    public var selectedItem: CustomStringConvertible? {
+        return menu?.selectedItem
+    }
+
+    fileprivate override func makePopoverViewController() -> UIViewController? {
         guard let menu = self.menu else { return nil }
         return MenuViewController(menu: menu)
     }
 }
-
 
 public class DropDownBarButton: UIBarButtonItem {
     
@@ -475,5 +518,9 @@ public class DropDownMenuBarButton: DropDownBarButton {
 
     private let _innerButton = DropDownMenuButton()
     fileprivate override var innerButton: DropDownMenuButton { return _innerButton }
-}
+
+    public var selectedItem: CustomStringConvertible? {
+        return innerButton.selectedItem
+    }
+    }
 
