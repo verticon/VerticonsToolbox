@@ -207,6 +207,14 @@ public class RadioButtonGroup {
             $0.addTarget(self, action: #selector(selectionHandler(_:)), for: .touchUpInside)
         }
     }
+
+    public func set(enabled: Bool) {
+        group.forEach { $0.isEnabled = enabled }
+    }
+    
+    public func set(selected: RadioButton) {
+        group.forEach { $0.isSelected = $0 === selected }
+    }
     
     @objc private func selectionHandler(_ sender: RadioButton) {
         let wasSelected = sender.isSelected

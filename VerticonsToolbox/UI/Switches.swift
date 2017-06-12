@@ -26,26 +26,9 @@ class VerticallyCenteredTextLayer : CATextLayer {
     }
 }
 
-@IBDesignable public class Switch : UISwitch {
+@IBDesignable public class TitledSwitch : UISwitch {
     private let titleLayer = VerticallyCenteredTextLayer()
-    @IBInspectable public var title: String = "" {
-        didSet {
-            titleLayer.string = title
-        }
-    }
 
-    @IBInspectable public var titleColor: UIColor = UIColor.darkText {
-        didSet {
-            titleLayer.foregroundColor = titleColor.cgColor
-        }
-    }
-    
-    @IBInspectable public var titleSize: Float = 15 {
-        didSet {
-            titleLayer.fontSize = CGFloat(titleSize)
-        }
-    }
-    
     override public init(frame: CGRect) {
         super.init(frame: frame)
         initialize()
@@ -55,10 +38,37 @@ class VerticallyCenteredTextLayer : CATextLayer {
         super.init(coder: aDecoder)
         initialize()
     }
-
+    
     private func initialize() {
         titleLayer.frame = bounds
         titleLayer.alignmentMode = kCAAlignmentCenter
         layer.addSublayer(titleLayer)
+        titleLayer.foregroundColor = isEnabled ? titleColorEnabled.cgColor : titleColorDisabled.cgColor
+    }
+
+    @IBInspectable public var title: String = "" {
+        didSet {
+            titleLayer.string = title
+        }
+    }
+
+    @IBInspectable public var titleColorEnabled: UIColor = UIColor.darkGray
+    
+    @IBInspectable public var titleColorDisabled: UIColor = UIColor.lightGray
+ 
+    @IBInspectable public var titleSize: Float = 15 {
+        didSet {
+            titleLayer.fontSize = CGFloat(titleSize)
+        }
+    }
+    
+    override public var isEnabled: Bool {
+        get {
+            return super.isEnabled
+        }
+        set {
+            super.isEnabled = newValue
+            titleLayer.foregroundColor = isEnabled ? titleColorEnabled.cgColor : titleColorDisabled.cgColor
+        }
     }
 }
