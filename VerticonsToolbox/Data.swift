@@ -78,79 +78,33 @@ public extension Data {
     }
 }
 
-public enum NumericType {
-    
-    case int8
-    case uint8
-    case int16
-    case uint16
-    case int32
-    case uint32
-    case int64
-    case uint64
-    case float
-    case double
-    
-    public var type: Any {
-        switch self {
-        case .int8: return Int8.self
-        case .uint8: return UInt8.self
-        case .int16: return Int16.self
-        case .uint16: return UInt16.self
-        case .int32: return Int32.self
-        case .uint32: return UInt32.self
-        case .int64: return Int64.self
-        case .uint64: return UInt64.self
-        case .float: return Float.self
-        case .double: return Double.self
-        }
-    }
-    
-    public var name: String {
-        switch self {
-        case .int8: return "\(Int8.self)"
-        case .uint8: return "\(UInt8.self)"
-        case .int16: return "\(Int16.self)"
-        case .uint16: return "\(UInt16.self)"
-        case .int32: return "\(Int32.self)"
-        case .uint32: return "\(UInt32.self)"
-        case .int64: return "\(Int64.self)"
-        case .uint64: return "\(UInt64.self)"
-        case .float: return "\(Float.self)"
-        case .double: return "\(Double.self)"
-        }
-    }
-    
-    /// The index of this numeric type in the NumericType.all array
-    public var index: Int? {
-        for index in 0 ..< NumericType.all.count {
-            if self == NumericType.all[index].type {
-                return index
-            }
-        }
-        return nil
-    }
-    
-    public struct Wrapper : CustomStringConvertible {
-        public let type: NumericType
-        public var description: String { return type.name }
-    }
-    
-    public static let all: [Wrapper] = {
-        var wrappers = [Wrapper]()
-        
-        wrappers.append(Wrapper(type: .int8))
-        wrappers.append(Wrapper(type: .uint8))
-        wrappers.append(Wrapper(type: .int16))
-        wrappers.append(Wrapper(type: .uint16))
-        wrappers.append(Wrapper(type: .int32))
-        wrappers.append(Wrapper(type: .uint32))
-        wrappers.append(Wrapper(type: .int64))
-        wrappers.append(Wrapper(type: .uint64))
-        wrappers.append(Wrapper(type: .float))
-        wrappers.append(Wrapper(type: .double))
-        
-        return wrappers
-    }()
-    
+//*****************************************************************************************************************************
+
+public protocol DataConvertible {
+    init?(data: Data)
+    var data: Data { get }
 }
+
+public extension DataConvertible {
+    
+    public init?(data: Data) {
+        guard data.count == MemoryLayout<Self>.size else { return nil }
+        self = data.withUnsafeBytes { $0.pointee }
+    }
+    
+    public var data: Data {
+        var value = self
+        return Data(buffer: UnsafeBufferPointer(start: &value, count: 1))
+    }
+}
+
+extension Int8 : DataConvertible { }
+extension UInt8 : DataConvertible { }
+extension Int16 : DataConvertible { }
+extension UInt16 : DataConvertible { }
+extension Int32 : DataConvertible { }
+extension UInt32 : DataConvertible { }
+extension Int64 : DataConvertible { }
+extension UInt64 : DataConvertible { }
+extension Float : DataConvertible { }
+extension Double : DataConvertible { }
