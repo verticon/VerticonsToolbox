@@ -69,64 +69,101 @@ open class ToggleButton: ColoredButton {
 @IBDesignable
 public class RadioButton: UIButton {
     
-    internal var outerCircleLayer = CAShapeLayer()
-    internal var innerCircleLayer = CAShapeLayer()
+    public var listener: ((Bool) -> Void)?
+
+    internal var bevelLayer = CAShapeLayer()
+    internal var buttonLayer = CAShapeLayer()
     
     
-    @IBInspectable public var outerCircleColor: UIColor = UIColor.green {
+    @IBInspectable public var bezelColor: UIColor = UIColor.lightGray {
         didSet {
-            outerCircleLayer.strokeColor = outerCircleColor.cgColor
+            bevelLayer.strokeColor = bezelColor.cgColor
         }
     }
-    @IBInspectable public var innerCircleColor: UIColor = UIColor.green {
+
+    @IBInspectable public var bezelWidth: CGFloat = 2.0 {
         didSet {
-            setFillState()
+            layoutSubLayers()
+        }
+    }
+
+    @IBInspectable public var bezelButtonGap: CGFloat = 4.0 {
+        didSet {
+            layoutSubLayers()
+        }
+    }
+
+    @IBInspectable public var buttonColor: UIColor = UIColor.lightGray {
+        didSet {
+            indicateButtonState()
         }
     }
     
-    @IBInspectable public var outerCircleLineWidth: CGFloat = 3.0 {
+    @IBInspectable  public fileprivate(set) var isPressed: Bool = false {
         didSet {
-            setCircleLayouts()
+            indicateButtonState()
         }
     }
-    @IBInspectable public var innerCircleGap: CGFloat = 3.0 {
-        didSet {
-            setCircleLayouts()
-        }
-    }
-    
+
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        customInitialization()
+        initialize()
     }
 
     // MARK: Initialization
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        customInitialization()
+        initialize()
     }
 
-    internal var setCircleRadius: CGFloat {
-        let width = bounds.width
-        let height = bounds.height
+    private func initialize() {
+        bevelLayer.frame = bounds
+        bevelLayer.lineWidth = bezelWidth
+        bevelLayer.fillColor = UIColor.clear.cgColor
+        bevelLayer.strokeColor = bezelColor.cgColor
+        layer.addSublayer(bevelLayer)
         
-        let length = width > height ? height : width
-        return (length - outerCircleLineWidth) / 2
+        buttonLayer.frame = bounds
+        buttonLayer.lineWidth = bezelWidth
+        buttonLayer.fillColor = UIColor.clear.cgColor
+        buttonLayer.strokeColor = UIColor.clear.cgColor
+        layer.addSublayer(buttonLayer)
+        
+        addTarget(self, action: #selector(pressHandler(_:)), for: .touchUpInside)
+
+        indicateButtonState()
     }
     
-    private var setCircleFrame: CGRect {
+    override public func prepareForInterfaceBuilder() {
+        initialize()
+    }
+    
+    @objc private func pressHandler(_ sender: RadioButton) {
+        isPressed = !isPressed
+        if let listener = listener { listener(isPressed) }
+    }
+
+    private var bezelInnerRadius: CGFloat {
         let width = bounds.width
         let height = bounds.height
         
-        let radius = setCircleRadius
+        let maxSide = width > height ? height : width
+        return (maxSide - bezelWidth) / 2
+    }
+    
+    private var bezelInnerFrame: CGRect {
+        let width = bounds.width
+        let height = bounds.height
+        
+        let radius = bezelInnerRadius
         let x: CGFloat
         let y: CGFloat
         
         if width > height {
-            y = outerCircleLineWidth / 2
+            y = bezelWidth / 2
             x = (width / 2) - radius
         } else {
-            x = outerCircleLineWidth / 2
+            x = bezelWidth / 2
             y = (height / 2) - radius
         }
         
@@ -134,93 +171,65 @@ public class RadioButton: UIButton {
         return CGRect(x: x, y: y, width: diameter, height: diameter)
     }
     
-    private var circlePath: UIBezierPath {
-        return UIBezierPath(roundedRect: setCircleFrame, cornerRadius: setCircleRadius)
+    private var bezelPath: UIBezierPath {
+        return UIBezierPath(roundedRect: bezelInnerFrame, cornerRadius: bezelInnerRadius)
     }
     
-    private var fillCirclePath: UIBezierPath {
-        let trueGap = innerCircleGap + (outerCircleLineWidth / 2)
-        return UIBezierPath(roundedRect: setCircleFrame.insetBy(dx: trueGap, dy: trueGap), cornerRadius: setCircleRadius)
+    private var buttonPath: UIBezierPath {
+        let trueGap = bezelButtonGap + (bezelWidth / 2)
+        return UIBezierPath(roundedRect: bezelInnerFrame.insetBy(dx: trueGap, dy: trueGap), cornerRadius: bezelInnerRadius)
         
     }
     
-    private func customInitialization() {
-        outerCircleLayer.frame = bounds
-        outerCircleLayer.lineWidth = outerCircleLineWidth
-        outerCircleLayer.fillColor = UIColor.clear.cgColor
-        outerCircleLayer.strokeColor = outerCircleColor.cgColor
-        layer.addSublayer(outerCircleLayer)
+    private func layoutSubLayers() {
+        bevelLayer.frame = bounds
+        bevelLayer.lineWidth = bezelWidth
+        bevelLayer.path = bezelPath.cgPath
         
-        innerCircleLayer.frame = bounds
-        innerCircleLayer.lineWidth = outerCircleLineWidth
-        innerCircleLayer.fillColor = UIColor.clear.cgColor
-        innerCircleLayer.strokeColor = UIColor.clear.cgColor
-        layer.addSublayer(innerCircleLayer)
-        
-        setFillState()
+        buttonLayer.frame = bounds
+        buttonLayer.lineWidth = bezelWidth
+        buttonLayer.path = buttonPath.cgPath
     }
     
-    private func setCircleLayouts() {
-        outerCircleLayer.frame = bounds
-        outerCircleLayer.lineWidth = outerCircleLineWidth
-        outerCircleLayer.path = circlePath.cgPath
-        
-        innerCircleLayer.frame = bounds
-        innerCircleLayer.lineWidth = outerCircleLineWidth
-        innerCircleLayer.path = fillCirclePath.cgPath
-    }
-    
-    // MARK: Custom
-    private func setFillState() {
-        if self.isSelected {
-            innerCircleLayer.fillColor = outerCircleColor.cgColor
-        } else {
-            innerCircleLayer.fillColor = UIColor.clear.cgColor
-        }
+    private func indicateButtonState() {
+        buttonLayer.fillColor = isPressed ? bezelColor.cgColor : UIColor.clear.cgColor
     }
 
-    // Overriden methods.
-
-    override public func prepareForInterfaceBuilder() {
-        customInitialization()
-    }
-    override public func layoutSubviews() {
+   override public func layoutSubviews() {
         super.layoutSubviews()
-        setCircleLayouts()
-    }
-    override public var isSelected: Bool {
-        didSet {
-            setFillState()
-        }
+        layoutSubLayers()
     }
 }
 
 public class RadioButtonGroup {
     private let group: [RadioButton]
-    private let handler: (RadioButton) -> Void
+    private let changeHandler: (RadioButton) -> Void
     
-    public init(buttons: RadioButton ..., selectionHandler: @escaping (RadioButton) -> Void) {
+    public init(buttons: RadioButton ..., initialSelection: RadioButton, selectionChangedHandler: @escaping (RadioButton) -> Void) {
         group = buttons
-        handler = selectionHandler
+        changeHandler = selectionChangedHandler
 
-        group.forEach {
-            $0.addTarget(self, action: #selector(selectionHandler(_:)), for: .touchUpInside)
+        group.forEach { button in
+            button.addTarget(self, action: #selector(pressHandler(_:)), for: .touchUpInside)
         }
+        set(selected: initialSelection)
     }
 
+    public func set(hidden: Bool) {
+        group.forEach { $0.isHidden = hidden }
+    }
+    
     public func set(enabled: Bool) {
         group.forEach { $0.isEnabled = enabled }
     }
     
     public func set(selected: RadioButton) {
-        group.forEach { $0.isSelected = $0 === selected }
+        group.forEach { $0.isPressed = $0 == selected }
     }
     
-    @objc private func selectionHandler(_ sender: RadioButton) {
-        let wasSelected = sender.isSelected
-        group.forEach { $0.isSelected = false }
-        sender.isSelected = true
-        if !wasSelected { handler(sender) }
+    @objc private func pressHandler(_ sender: RadioButton) {
+        group.forEach { $0.isPressed = $0 === sender }
+        if sender.isPressed { changeHandler(sender) }
     }
 }
 
