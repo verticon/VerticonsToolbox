@@ -42,25 +42,36 @@ class VerticallyCenteredTextLayer : CATextLayer {
     private func initialize() {
         titleLayer.frame = bounds
         titleLayer.alignmentMode = kCAAlignmentCenter
-        layer.addSublayer(titleLayer)
         titleLayer.foregroundColor = isEnabled ? titleColorEnabled.cgColor : titleColorDisabled.cgColor
+        layer.addSublayer(titleLayer)
     }
 
     @IBInspectable public var title: String = "" {
         didSet {
             titleLayer.string = title
+            resize()
         }
     }
 
+    @IBInspectable public var titleSize: Float = 15 {
+        didSet {
+            titleLayer.fontSize = CGFloat(titleSize)
+            resize()
+        }
+    }
+    
+    private func resize() {
+        let font = UIFont.systemFont(ofSize: CGFloat(titleSize))
+        let string = NSAttributedString(string: title, attributes: [NSFontAttributeName : font])
+        let rect = string.boundingRect(with: CGSize(width: 200, height:50), context: nil)
+        let bounds = CGRect(x: 0, y: 0, width: rect.width, height: rect.height)
+        titleLayer.bounds = bounds
+    }
+    
     @IBInspectable public var titleColorEnabled: UIColor = UIColor.darkGray
     
     @IBInspectable public var titleColorDisabled: UIColor = UIColor.lightGray
  
-    @IBInspectable public var titleSize: Float = 15 {
-        didSet {
-            titleLayer.fontSize = CGFloat(titleSize)
-        }
-    }
     
     override public var isEnabled: Bool {
         get {
