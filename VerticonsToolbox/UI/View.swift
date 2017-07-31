@@ -59,6 +59,20 @@ public extension UIView {
     }
 }
 
+@IBDesignable public class GradientView: UIView {
+    @IBInspectable public var firstColor = UIColor.white
+    @IBInspectable public var secondColor = UIColor.black
+    
+    override public class var layerClass: AnyClass {
+        return CAGradientLayer.self
+    }
+    
+    override public func layoutSubviews() {
+        (layer as? CAGradientLayer)?.colors = [firstColor.cgColor, secondColor.cgColor]
+        super.layoutSubviews()
+    }
+}
+
 /*
 public extension UIView {
     /*
