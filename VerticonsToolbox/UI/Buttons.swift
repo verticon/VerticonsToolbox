@@ -350,6 +350,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
     }
 }
 
+// TODO: Consider what to do when a list item's description does not fit.
 @IBDesignable
 public class DropDownListButton: DropDownButton {
     
