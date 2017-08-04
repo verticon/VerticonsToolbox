@@ -297,7 +297,16 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
     public func trigger() {
         toggle(sender: self)
     }
-    
+
+    public var color : UIColor = UIColor.gray {
+        didSet {
+            if let image = imageView?.image {
+                setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
+                tintColor = color
+            }
+        }
+    }
+
     public var collapsed: Bool {
         return imageView?.transform == CGAffineTransform.identity
     }
