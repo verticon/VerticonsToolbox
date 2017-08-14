@@ -483,12 +483,18 @@ public class DropDownMenuButton: DropDownButton {
     public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Self? {
         guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return nil }
         
-        menu = Menu(items: items, initialSelection: initialSelection, selectionHandler: {
+        menu = Menu(items: items, initialSelection: initialSelection, selectionHandler: { selection in
             
             self.collapse()
-            self.setTitle($0.description, for: .normal)
+            self.setTitle(selection.description, for: .normal)
             
-            selectionHandler($0)
+            // A situation was encountered wherein the selection handler attempted to present an alert.
+            // The alert did not appear and the dismissal of the popover was interfered with. Hence we
+            // delay the invocation of the handler until the popover has been fully dismissed (100 ms
+            // was too short a time).
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                selectionHandler(selection)
+            }
         })
         
         setTitle(menu!.items[initialSelection].description, for: .normal)
