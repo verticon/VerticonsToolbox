@@ -74,3 +74,20 @@ public extension UIImage {
         
     }
 }
+
+public extension UIImageView {
+
+    public func aspectFitImageSize() -> CGSize {
+        if let image = self.image {
+            let imageSize = image.size
+            let widthRatio = bounds.size.width / imageSize.width
+            let heightRatio = bounds.size.height / imageSize.height
+            let scale = min(widthRatio, heightRatio)
+            let scaledImageWidth = scale * imageSize.width
+            let scaledImageHeight = scale * imageSize.height
+
+            return CGSize(width: scaledImageWidth, height: scaledImageHeight)
+        }
+        return CGSize.zero
+    }
+}
