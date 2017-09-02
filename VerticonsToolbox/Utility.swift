@@ -102,7 +102,10 @@ public class ElapsedTime : CustomStringConvertible {
     }
     
     public var description : String {
-        return timeFormatter.string(from: elapsedTime)!
+        let interval = elapsedTime
+        let fractions = interval.truncatingRemainder(dividingBy: 1)
+        let milliseconds = Int(1000 * fractions)
+        return timeFormatter.string(from: interval)! + String(format: ".%03d", milliseconds)
     }
 }
 
