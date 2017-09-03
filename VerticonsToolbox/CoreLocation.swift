@@ -94,7 +94,7 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
         manager.delegate = delegate
     }
 
-    public var location: CLLocation? {
+    public var current: CLLocation? {
         return manager.location
     }
 }
