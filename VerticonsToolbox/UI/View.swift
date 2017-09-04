@@ -57,6 +57,43 @@ public extension UIView {
         
         return findViewController(forResponder: self)
     }
+
+    // Draw a circle with a line through it
+    public func drawFailureIndication(context: CGContext, lineWidth: CGFloat) {
+
+        context.saveGState()
+
+        context.setStrokeColor(UIColor.red.cgColor)
+        context.setLineWidth(lineWidth)
+        
+        // First the circle
+        
+        let minDimension = bounds.maxX < bounds.maxY ? bounds.maxX : bounds.maxY
+        let side = minDimension - lineWidth
+        
+        context.addEllipse(in: CGRect(x: bounds.midX - (side / 2), y: bounds.midY - (side / 2), width: side, height: side))
+        context.strokePath()
+        
+        // Then the line
+        
+        let radius = Double(side / 2)
+        
+        let startAngle = 135 * Double.pi / 180
+        let startX = radius * cos(startAngle)
+        let startY = -radius * sin(startAngle) // Positive Y is down instead of up, hence the negative sign to correct
+        
+        let finishAngle = 315 * Double.pi / 180
+        let finishX = radius * cos(finishAngle)
+        let finishY = -radius * sin(finishAngle)
+        
+        context.translateBy(x: bounds.midX, y: bounds.midY)     // Place the origin in the middle
+        context.move(to: CGPoint(x: startX, y: startY))         // Move onto the circle at the start angle
+        context.addLine(to: CGPoint(x: finishX, y: finishY))    // Draw a line across the circle
+        context.strokePath()
+        context.translateBy(x: -bounds.midX, y: -bounds.midY)   // Put the origin back to where it was
+
+        context.restoreGState()
+    }
 }
 
 @IBDesignable open class GradientView: UIView {
