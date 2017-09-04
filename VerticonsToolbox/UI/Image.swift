@@ -73,6 +73,40 @@ public extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()!
         
     }
+
+    private class FailureView : UIView {
+        override func draw(_ rect: CGRect) {
+            var lineWidth = bounds.width / 20
+            if lineWidth < 1 { lineWidth = 1 }
+            self.drawFailureIndication(lineWidth: lineWidth)
+        }
+    }
+
+    // Return an image of a circle with a line through it; optionally including the provided text
+    static func createFailureIndication(ofSize: CGSize, withText: String?) -> UIImage {
+        let failureView = FailureView(frame: CGRect(x: 0, y: 0, width: ofSize.width, height: ofSize.height))
+
+        var label: UILabel? = nil
+        if let text = withText {
+            let l = UILabel(frame: CGRect(x: 0, y: 0, width: ofSize.width, height: ofSize.height))
+            l.backgroundColor = UIColor.clear
+            l.textAlignment = .center
+            l.textColor = UIColor.red
+            l.font = UIFont.systemFont(ofSize: 4)
+            l.numberOfLines = 0
+            l.text = text
+
+            label = l
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(failureView.bounds.size, false, 0);
+        failureView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        label?.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let failureImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext();
+        
+        return failureImage
+    }
 }
 
 public extension UIImageView {

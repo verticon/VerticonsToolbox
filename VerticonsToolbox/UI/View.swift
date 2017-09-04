@@ -59,8 +59,9 @@ public extension UIView {
     }
 
     // Draw a circle with a line through it
-    public func drawFailureIndication(context: CGContext, lineWidth: CGFloat) {
+    public func drawFailureIndication(lineWidth: CGFloat) {
 
+        let context = UIGraphicsGetCurrentContext()!;
         context.saveGState()
 
         context.setStrokeColor(UIColor.red.cgColor)
