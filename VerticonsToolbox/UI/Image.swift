@@ -124,4 +124,11 @@ public extension UIImageView {
         }
         return CGSize.zero
     }
+
+    public func setColor(_ newColor: UIColor) {
+        if let image = self.image {
+            self.image = image.withRenderingMode(.alwaysTemplate)
+            tintColor = newColor
+        }
+    }
 }
