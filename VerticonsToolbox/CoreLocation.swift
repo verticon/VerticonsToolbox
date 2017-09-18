@@ -5,17 +5,30 @@
 //  Created by Robert Vaessen on 4/17/17.
 //  Copyright © 2017 Verticon. All rights reserved.
 //
+// Latitude is 0 degrees at the equater. It increases heading north, becoming +90 degrees
+// at the north pole. It decreases heading south, becoming -90 degrees at the south pole.
+//
+// Longitude is 0 degress at the prime meridian (Greenwich, England). It increases heading
+// east, becoming +180 degrees when it reaches the "other side" of the prime meridian.
+// It decreases heading west, becoming -180 degrees when it reaches the other side.
+//
+// A CLLocationDirection specifies, in degrees, an angle relation to north. A value 0 means
+// the device is pointed toward the north, 90 means it is pointed due east, 180 means it is
+// pointed due south, 270 means it is pointed duw west. A negative value indicates that the
+// heading could not be determined.
+
 
 import Foundation
 import CoreLocation
+import MapKit
 
 public func nameForAuthorizationStatus(_ status: CLAuthorizationStatus) -> String {
     switch status {
-    case CLAuthorizationStatus.authorizedAlways: return "AuthorizedAlways"
-    case CLAuthorizationStatus.authorizedWhenInUse: return "AuthorizedWhenInUse"
-    case CLAuthorizationStatus.denied: return "Denied"
-    case CLAuthorizationStatus.notDetermined: return "NotDetermined"
-    case CLAuthorizationStatus.restricted: return "Restricted"
+    case .authorizedAlways: return "AuthorizedAlways"
+    case .authorizedWhenInUse: return "AuthorizedWhenInUse"
+    case .denied: return "Denied"
+    case .notDetermined: return "NotDetermined"
+    case .restricted: return "Restricted"
     }
 }
 
@@ -30,26 +43,47 @@ public func nameForProximity(_ proximity: CLProximity) -> String {
 
 public func nameForRegionState(_ state: CLRegionState) -> String {
     switch state {
-    case CLRegionState.unknown: return "Unknown"
-    case CLRegionState.inside: return "Inside"
-    case CLRegionState.outside: return "Outside"
+    case .unknown: return "Unknown"
+    case .inside: return "Inside"
+    case .outside: return "Outside"
     }
 }
 
+func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+
+// Note: I tried to define the UserLocationEvent enum within the UserLocation class (i.e. UserLocation.Event)
+// but a trap occurred on the line which initializes the static instance - I think the Broadcaster caused it.
 public enum UserLocationEvent {
     case locationUpdate(CLLocation)
     case geocodeUpdate(CLLocation)
+    case headingUpdate(CLHeading)
 }
 
+// The UserLocation is a broadcaster hence listeners can be added to receive events (see UserLocationEvent)
 public class UserLocation : Broadcaster<UserLocationEvent> {
     
-    public private(set) static var instance: UserLocation?
-    public static func enable() {
-        if instance == nil {
-            instance = CLLocationManager.locationServicesEnabled() ? UserLocation() : nil
-        }
+    //******************************************************************************
+    //                              API
+    //******************************************************************************
+    
+    public static let instance: UserLocation = UserLocation()
+
+    public var currentLocation: CLLocation? {
+        return manager.location
     }
     
+    public var currentBearing: CLLocationDirection? {
+        if let bearing = manager.heading?.trueHeading, bearing >= 0 {
+            return bearing
+        }
+        return nil
+    }
+
+    //******************************************************************************
+    //                              Private
+    //******************************************************************************
+
     private class Delegate : NSObject, CLLocationManagerDelegate {
         
         fileprivate var userLocation: UserLocation!
@@ -61,19 +95,28 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
                 manager.requestWhenInUseAuthorization();
                 
             case CLAuthorizationStatus.authorizedAlways:
-                manager.startUpdatingLocation()
+                fallthrough
                 
             case CLAuthorizationStatus.authorizedWhenInUse:
                 manager.startUpdatingLocation()
+                manager.startUpdatingHeading()
                 
             default:
                 alertUser(title: "Location Access Not Authorized", body: "\(applicationName) will not be able to provide location related functionality.")
                 break
             }
         }
-
+        
         public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
             userLocation.broadcast(.locationUpdate(locations[locations.count - 1]))
+        }
+        
+        func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+            userLocation.broadcast(.headingUpdate(newHeading))
+        }
+        
+        func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+            print("Location manager error: \(error)")
         }
     }
 
@@ -83,7 +126,7 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
     private override init() {
 
         manager = CLLocationManager()
-        manager.distanceFilter = 5
+        manager.distanceFilter = 1
         manager.desiredAccuracy = kCLLocationAccuracyBest
 
         delegate = Delegate()
@@ -91,10 +134,52 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
         super.init()
 
         delegate.userLocation = self
-        manager.delegate = delegate
+        manager.delegate = delegate // Setting the delegate results in didChangeAuthorization being called.
+    }
+}
+
+public extension MKCoordinateRegion {
+
+    func contains(location: CLLocation) -> Bool {
+
+        /* Standardizes an angle to -180 -> 180 degrees */
+        func standardAngle(_ angle: CLLocationDegrees) -> CLLocationDegrees {
+            let remainder = angle.truncatingRemainder(dividingBy: 360)
+            return remainder < -180 ? -360 - remainder : remainder > 180 ? 360 - 180 : remainder
+        }
+        
+        let deltaLat = abs(standardAngle(self.center.latitude - location.coordinate.latitude))
+        let deltalong = abs(standardAngle(self.center.longitude - location.coordinate.longitude))
+        return self.span.latitudeDelta >= deltaLat && self.span.longitudeDelta >= deltalong
+    }
+}
+
+public extension CLLocation {
+
+    // Returns a value in the range of 0 to 360 degrees where 0 is north.
+    func bearing(to : CLLocation) -> Double {
+        
+        let lat1 = degreesToRadians(degrees: self.coordinate.latitude)
+        let lon1 = degreesToRadians(degrees: self.coordinate.longitude)
+        
+        let lat2 = degreesToRadians(degrees: to.coordinate.latitude)
+        let lon2 = degreesToRadians(degrees: to.coordinate.longitude)
+        
+        let dLon = lon2 - lon1
+        
+        let y = sin(dLon) * cos(lat2)
+        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        let radiansBearing = atan2(y, x)
+        
+        var degreeBearing = radiansToDegrees(radians: radiansBearing) // -180 to +180
+        if degreeBearing < 0 { degreeBearing += 360 } // 0 to 360
+
+        return degreeBearing
     }
 
-    public var current: CLLocation? {
-        return manager.location
+    func yards(from: CLLocation) -> Double {
+        let YardsPerMeter = 1.0936
+        return self.distance(from: from) * YardsPerMeter
     }
+    
 }
