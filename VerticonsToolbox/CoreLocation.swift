@@ -140,17 +140,10 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
 
 public extension MKCoordinateRegion {
 
-    func contains(location: CLLocation) -> Bool {
-
-        /* Standardizes an angle to -180 -> 180 degrees */
-        func standardAngle(_ angle: CLLocationDegrees) -> CLLocationDegrees {
-            let remainder = angle.truncatingRemainder(dividingBy: 360)
-            return remainder < -180 ? -360 - remainder : remainder > 180 ? 360 - 180 : remainder
-        }
-        
-        let deltaLat = abs(standardAngle(self.center.latitude - location.coordinate.latitude))
-        let deltalong = abs(standardAngle(self.center.longitude - location.coordinate.longitude))
-        return self.span.latitudeDelta >= deltaLat && self.span.longitudeDelta >= deltalong
+    func contains(coordinate: CLLocationCoordinate2D) -> Bool {
+        let latCheck = cos((center.latitude - coordinate.latitude) * .pi/180.0) > cos(span.latitudeDelta/2.0 * .pi/180.0);
+        let lonCheck = cos((center.longitude - coordinate.longitude) * .pi/180.0) > cos(span.longitudeDelta/2.0 * .pi/180.0);
+        return latCheck && lonCheck
     }
 }
 
