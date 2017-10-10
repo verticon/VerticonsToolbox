@@ -80,6 +80,11 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
         return nil
     }
 
+    public var distanceFilter: CLLocationDistance {
+        get { return manager.distanceFilter }
+        set { manager.distanceFilter = newValue }
+    }
+
     //******************************************************************************
     //                              Private
     //******************************************************************************
@@ -98,6 +103,8 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
                 fallthrough
                 
             case CLAuthorizationStatus.authorizedWhenInUse:
+                manager.distanceFilter = 1
+                manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 manager.startUpdatingLocation()
                 manager.startUpdatingHeading()
                 
@@ -126,9 +133,6 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
     private override init() {
 
         manager = CLLocationManager()
-        manager.distanceFilter = 1
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-
         delegate = Delegate()
         
         super.init()
@@ -175,4 +179,12 @@ public extension CLLocation {
         return self.distance(from: from) * YardsPerMeter
     }
     
+}
+
+public func makeRect(center: CLLocationCoordinate2D, span: MKCoordinateSpan) -> MKMapRect {
+    let northWestCornerCoordinate = CLLocationCoordinate2D(latitude: center.latitude + span.latitudeDelta/2, longitude: center.longitude - span.longitudeDelta/2)
+    let southEastCornetCoordinate = CLLocationCoordinate2D(latitude: center.latitude - span.latitudeDelta/2, longitude: center.longitude + span.longitudeDelta/2)
+    let upperLeftCornerPoint = MKMapPointForCoordinate(northWestCornerCoordinate)
+    let lowerRightCornerPoint = MKMapPointForCoordinate(southEastCornetCoordinate)
+    return MKMapRectMake(upperLeftCornerPoint.x, upperLeftCornerPoint.y, lowerRightCornerPoint.x - upperLeftCornerPoint.x, lowerRightCornerPoint.y - upperLeftCornerPoint.y)
 }
