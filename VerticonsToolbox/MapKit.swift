@@ -30,7 +30,7 @@ public extension MKMapView {
     }
 }
 
-public class ZoomingPolylineRenderer : MKPolylineRenderer {
+open class ZoomingPolylineRenderer : MKPolylineRenderer {
     
     private var mapView: MKMapView!
     private var polylineWidth: Double! // Meters
@@ -42,9 +42,38 @@ public class ZoomingPolylineRenderer : MKPolylineRenderer {
         self.polylineWidth = polylineWidth
     }
     
-    override public func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
+    override open func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
         self.lineWidth = CGFloat(mapView.metersToPoints(meters: polylineWidth))
         super.draw(mapRect, zoomScale: zoomScale, in: context)
     }
 }
 
+func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordinateRegion? {
+    if coordinates.count > 0 {
+        var westmost = coordinates[0].longitude
+        var eastmost = westmost
+        var northmost = coordinates[0].latitude
+        var southmost = northmost
+        
+        for coordinate in coordinates {
+            if coordinate.longitude < westmost { westmost = coordinate.longitude }
+            else if coordinate.longitude > eastmost { eastmost = coordinate.longitude }
+            if coordinate.latitude > northmost { northmost = coordinate.latitude }
+            else if coordinate.latitude < southmost { southmost = coordinate.latitude }
+        }
+        
+        let margin = 0.005
+        westmost -= margin
+        eastmost += margin
+        northmost += margin
+        southmost -= margin
+        
+        let latitudeDelta = northmost - southmost
+        let longitudeDelta = eastmost - westmost
+        let span = MKCoordinateSpanMake(latitudeDelta, longitudeDelta)
+        let midPoint = CLLocationCoordinate2DMake(southmost + latitudeDelta/2, westmost + longitudeDelta/2)
+        
+        return MKCoordinateRegionMake(midPoint, span)
+    }
+    return nil
+}
