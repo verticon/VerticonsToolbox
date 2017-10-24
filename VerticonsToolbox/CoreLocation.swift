@@ -142,15 +142,6 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
     }
 }
 
-public extension MKCoordinateRegion {
-
-    func contains(coordinate: CLLocationCoordinate2D) -> Bool {
-        let latCheck = cos((center.latitude - coordinate.latitude) * .pi/180.0) > cos(span.latitudeDelta/2.0 * .pi/180.0);
-        let lonCheck = cos((center.longitude - coordinate.longitude) * .pi/180.0) > cos(span.longitudeDelta/2.0 * .pi/180.0);
-        return latCheck && lonCheck
-    }
-}
-
 public extension CLLocation {
 
     // Returns a value in the range of 0 to 360 degrees where 0 is north.
