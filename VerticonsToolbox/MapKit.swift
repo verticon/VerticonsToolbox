@@ -48,7 +48,7 @@ open class ZoomingPolylineRenderer : MKPolylineRenderer {
     }
 }
 
-func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordinateRegion? {
+public func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordinateRegion? {
     if coordinates.count > 0 {
         var westmost = coordinates[0].longitude
         var eastmost = westmost
@@ -76,4 +76,30 @@ func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordinateRegio
         return MKCoordinateRegionMake(midPoint, span)
     }
     return nil
+}
+
+public extension MKCoordinateRegion {
+
+    static func * (spanMultiplier: CLLocationDegrees, region: MKCoordinateRegion) -> MKCoordinateRegion {
+        return MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: spanMultiplier * region.span.latitudeDelta, longitudeDelta: spanMultiplier * region.span.longitudeDelta))
+    }
+
+    func contains(coordinate: CLLocationCoordinate2D) -> Bool {
+        let latCheck = cos((center.latitude - coordinate.latitude) * .pi/180.0) > cos(span.latitudeDelta/2.0 * .pi/180.0);
+        let lngCheck = cos((center.longitude - coordinate.longitude) * .pi/180.0) > cos(span.longitudeDelta/2.0 * .pi/180.0);
+        return latCheck && lngCheck
+    }
+
+    mutating func zoomOut(to: CLLocationCoordinate2D) -> Bool {
+        guard !contains(coordinate: to) else { return false }
+
+        let multiplier = 2.25 // zoom out to include the coordinate plus a little bit more
+        let deltaLat = multiplier * abs(center.latitude - to.latitude)
+        let deltaLng = multiplier * abs(center.longitude - to.longitude)
+ 
+        if deltaLat > span.latitudeDelta { span.latitudeDelta = deltaLat }
+        if deltaLng > span.longitudeDelta { span.longitudeDelta = deltaLng }
+
+        return true
+    }
 }
