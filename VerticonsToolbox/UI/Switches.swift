@@ -62,7 +62,7 @@ public class VerticallyCenteredTextLayer : CATextLayer {
     
     private func resize() {
         let font = UIFont.systemFont(ofSize: CGFloat(titleSize))
-        let string = NSAttributedString(string: title, attributes: [NSFontAttributeName : font])
+        let string = NSAttributedString(string: title, attributes: [NSAttributedStringKey.font : font])
         let rect = string.boundingRect(with: CGSize(width: 200, height:50), context: nil)
         let bounds = CGRect(x: 0, y: 0, width: rect.width, height: rect.height)
         titleLayer.bounds = bounds

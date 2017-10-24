@@ -12,6 +12,6 @@ extension UIFont
 {
     public var monospacedDigitFont: UIFont
     {
-        return UIFont(descriptor: fontDescriptor.addingAttributes([UIFontDescriptorFeatureSettingsAttribute: [[UIFontFeatureTypeIdentifierKey: kNumberSpacingType, UIFontFeatureSelectorIdentifierKey: kMonospacedNumbersSelector]]]), size: 0)
+        return UIFont(descriptor: fontDescriptor.addingAttributes([UIFontDescriptor.AttributeName.featureSettings: [[UIFontDescriptor.FeatureKey.featureIdentifier: kNumberSpacingType, UIFontDescriptor.FeatureKey.typeIdentifier: kMonospacedNumbersSelector]]]), size: 0)
     }
 }

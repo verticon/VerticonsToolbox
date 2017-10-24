@@ -60,7 +60,7 @@ open class ToggleButton: ColoredButton {
         addTarget(self, action: #selector(toggle), for: .touchUpInside)
     }
     
-    open func toggle() {
+    @objc open func toggle() {
         isSelected = !isSelected
         if let listener = listener { listener(isSelected) }
     }
