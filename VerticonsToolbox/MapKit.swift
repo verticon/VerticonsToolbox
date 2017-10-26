@@ -28,6 +28,22 @@ public extension MKMapView {
         
         return meters * pointsPerMeter
     }
+
+    public var userIsInteracting: Bool {
+        if let gestureRecognizers = gestureView.gestureRecognizers {
+            for recognizer in gestureRecognizers {
+                if recognizer.state != .possible {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    // TODO: What's up with this? Why not just the MKMapView itself?
+    private var gestureView: UIView {
+        return subviews[0]
+    }
 }
 
 open class ZoomingPolylineRenderer : MKPolylineRenderer {
