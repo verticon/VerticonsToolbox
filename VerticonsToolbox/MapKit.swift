@@ -41,7 +41,7 @@ public extension MKMapView {
     }
     
     // TODO: What's up with this? Why not just the MKMapView itself?
-    private var gestureView: UIView {
+    public var gestureView: UIView {
         return subviews[0]
     }
 }
