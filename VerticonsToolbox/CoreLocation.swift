@@ -49,8 +49,8 @@ public func nameForRegionState(_ state: CLRegionState) -> String {
     }
 }
 
-func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
-func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+public func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+public func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
 
 // Note: I tried to define the UserLocationEvent enum within the UserLocation class (i.e. UserLocation.Event)
 // but a trap occurred on the line which initializes the static instance - I think the Broadcaster caused it.
@@ -144,7 +144,7 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
 
 public extension CLLocation {
 
-    // Returns a value in the range of 0 to 360 degrees where 0 is north.
+    // Returns the positive, clockwise angle (0 -> 359.999) from this location to the other location.
     func bearing(to : CLLocation) -> Double {
         
         let lat1 = degreesToRadians(degrees: self.coordinate.latitude)
