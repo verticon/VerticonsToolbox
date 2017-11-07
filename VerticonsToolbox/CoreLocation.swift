@@ -172,6 +172,22 @@ public extension CLLocation {
     
 }
 
+extension CLLocationCoordinate2D : CustomStringConvertible {
+    static public let zero = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+
+    static public func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
+    }
+    
+    static public func != (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        return !(lhs == rhs)
+    }
+
+    public var description: String {
+        return "lat \(String(format: "%.6f", latitude)), lng \(String(format: "%.6f", longitude))"
+    }
+}
+
 public func makeRect(center: CLLocationCoordinate2D, span: MKCoordinateSpan) -> MKMapRect {
     let northWestCornerCoordinate = CLLocationCoordinate2D(latitude: center.latitude + span.latitudeDelta/2, longitude: center.longitude - span.longitudeDelta/2)
     let southEastCornetCoordinate = CLLocationCoordinate2D(latitude: center.latitude - span.latitudeDelta/2, longitude: center.longitude + span.longitudeDelta/2)
