@@ -145,3 +145,10 @@ public func increaseIndent(_ original: String) -> String {
     }
     return modified
 }
+
+public class Weak<T: AnyObject> {
+    public weak var reference : T?
+    public init (reference: T) {
+        self.reference = reference
+    }
+}

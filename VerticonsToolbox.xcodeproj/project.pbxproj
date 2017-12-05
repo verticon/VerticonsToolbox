@@ -37,6 +37,7 @@
 		E1BED7761ECDFA08004A32D0 /* Switches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BED7751ECDFA08004A32D0 /* Switches.swift */; };
 		E1D0C39E1EC5F39F00A07D54 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1D0C39D1EC5F39F00A07D54 /* Media.xcassets */; };
 		E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F84E8E1EC8FABD00E9D924 /* String.swift */; };
+		E1FCE7A31FC06606002F75AD /* Sounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1FCE7A21FC06606002F75AD /* Sounds.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		E1BED7751ECDFA08004A32D0 /* Switches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Switches.swift; path = UI/Switches.swift; sourceTree = "<group>"; };
 		E1D0C39D1EC5F39F00A07D54 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = VerticonsToolbox/Media.xcassets; sourceTree = "<group>"; };
 		E1F84E8E1EC8FABD00E9D924 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		E1FCE7A21FC06606002F75AD /* Sounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sounds.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 				E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */,
 				E1B7620F1E5DC72400B01E19 /* UI */,
 				E1B762101E5DC73500B01E19 /* Utilities */,
+				E1FCE7A21FC06606002F75AD /* Sounds.swift */,
 			);
 			path = VerticonsToolbox;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				E1B7621E1E5DC76300B01E19 /* Image.swift in Sources */,
 				E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */,
 				E1B2E5591E8F0C6A00B6FFC1 /* Encodable.swift in Sources */,
+				E1FCE7A31FC06606002F75AD /* Sounds.swift in Sources */,
 				E131E8661EA528BB00DC8863 /* CoreLocation.swift in Sources */,
 				E1B7621B1E5DC76300B01E19 /* Autoresizing.swift in Sources */,
 				E1B7621D1E5DC76300B01E19 /* Color.swift in Sources */,

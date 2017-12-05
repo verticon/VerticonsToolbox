@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AudioToolbox
 
 public enum HexadecimalKey : Int {
     case zero
@@ -64,7 +63,7 @@ public class HexadecimalKeypad: UIView {
     }
 
     @IBAction func keyTapped(_ sender: UIButton) {
-        AudioServicesPlaySystemSound(1104)
+        playKeyPressedSound()
         self.delegate?.newKey(HexadecimalKey(rawValue: sender.tag)!)
     }
 

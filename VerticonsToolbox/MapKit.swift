@@ -8,6 +8,8 @@
 
 import MapKit
 
+public typealias Meters = CLLocationDistance
+
 public func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordinateRegion? {
     if coordinates.count > 0 {
         var westmost = coordinates[0].longitude
@@ -40,7 +42,7 @@ public func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordina
 
 public extension MKMapView {
 
-    public func metersToPoints(meters: Double) -> Double {
+    public func toPoints(meters: Meters) -> Double {
         
         let deltaPoints = 500.0
         
@@ -188,17 +190,70 @@ public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
 
     public class Renderer : MKPolylineRenderer {
         
-        // I had lots of trouble with the initializer; tried all kinds of things
-        // /Users/Robert/Development/Apple/iOS/Learn/VerticonsToolbox/VerticonsToolbox/MapKit.swift: 49: 14: fatal error: use of unimplemented initializer 'init(overlay:)' for class 'VerticonsToolbox.ZoomingPolylineRenderer'
+        static private let defaultColor = UIColor.gray
+        private var mapView: MKMapView? = nil
+        
+        /* The runtime error below was resolved by defining init(overlay:). I do not know why this is necessary
+         * (I observed that calling init(polyline:) results in init(overlay:)). being called.) As a consequence I
+         * had to make the mapView property an optional as well as provide a default value for the width property.
+         *
+         * 2017-11-08 14:24:28.461315-0500 Test[1547:337916] /Users/Robert/Temp/Test/Test/ViewController.swift: 13: 14:
+         * Fatal error: Use of unimplemented initializer 'init(overlay:)' for class 'Test.Renderer'
+         */
+        public override init(overlay: MKOverlay) {
+            super.init(overlay: overlay)
+            lineWidth = CGFloat(width)
+            strokeColor = userIsOn ? userIsOnColor : userIsOffColor
+        }
+        
+        // Note: You should use this initializer in order to get the desired behavior; see comments with init(overlay:)
+        public init(polyline: MKPolyline, mapView: MKMapView) {
+            super.init(polyline: polyline)
+            self.mapView = mapView // If I set mapView before calling super.init then it ends up nil ???
+        }
 
-        public var polylineWidth = 1.0 // Meters
-        public var userIsOnColor = UIColor.green
-        public var userIsOffColor = UIColor.red
+        // *************************************************************************************************
 
-        private var mapView: MKMapView?
+        public var width: Meters = 1 {
+            didSet {
+                guard width != oldValue else { return }
+                setNeedsDisplay()
+            }
+        }
+        
+        private var userIsOn: Bool = false {
+            didSet {
+                guard userIsOn != oldValue else { return }
+                
+                strokeColor = userIsOn ? userIsOnColor : userIsOffColor
+            }
+        }
 
-        fileprivate func subscribe(to: UserTrackingPolyLine, using: MKMapView) {
-            mapView = using
+        public var userIsOnColor = Renderer.defaultColor {
+            didSet {
+                guard userIsOnColor != oldValue else { return }
+                
+                if userIsOn { strokeColor = userIsOnColor } // Setting the stroke color results in an update; setNeedsDisplay() is not required.
+            }
+        }
+            
+        public var userIsOffColor = Renderer.defaultColor {
+            didSet {
+                guard userIsOffColor != oldValue else { return }
+                
+                if !userIsOn { strokeColor = userIsOffColor }
+            }
+        }
+
+        override public func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
+            if let mapView = mapView { lineWidth = CGFloat(mapView.toPoints(meters: width)) }
+            else { lineWidth = CGFloat(width) }
+
+            super.draw(mapRect, zoomScale: zoomScale, in: context)
+        }
+        // *************************************************************************************************
+
+        fileprivate func subscribe(to: UserTrackingPolyLine) {
             _ = to.addListener(self, handlerClassMethod: Renderer.userTrackingEventHandler)
         }
 
@@ -212,35 +267,21 @@ public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
                 break
             }
         }
-
-        private var userIsOn: Bool = false {
-            didSet {
-                if userIsOn != oldValue { setNeedsDisplay() }
-            }
-        }
-        
-        override public func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
-            if let mapView = mapView { lineWidth = CGFloat(mapView.metersToPoints(meters: polylineWidth)) }
-            strokeColor = userIsOn ? userIsOnColor : userIsOffColor
-            super.draw(mapRect, zoomScale: zoomScale, in: context)
-        }
     }
 
     private var listenerToken: ListenerManagement?
+    public private(set) var polyline: MKPolyline
+    public private(set) var renderer: Renderer
 
     public init(polyline: MKPolyline, mapView: MKMapView) {
         self.polyline = polyline
-        renderer = Renderer(polyline: polyline)
+        renderer = Renderer(polyline: polyline, mapView: mapView)
         super.init()
-        renderer.subscribe(to: self, using: mapView)
+        renderer.subscribe(to: self)
     }
     
-    public private(set) var polyline: MKPolyline
-
-    public private(set) var renderer: Renderer
-
     // Point is the polyline point closest to the user's actually location (as reported by Core Location).
-    // Distance: is the distance from the user to that closest point.
+    // Distance is the distance from the user to that closest point.
     // Valid if tracking is enabled, else nil.
     public private(set) var userTrackingData: (point: MKMapPoint, distance: CLLocationDistance)? {
         didSet {
@@ -264,7 +305,7 @@ public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
         }
     }
 
-    // True/False if the user is/isn't within trackingTolerence meters of the polyline
+    // True/False if the user is/isn't within tracking tolerence meters of the polyline
     // Valid if tracking is enabled, else nil.
     public private(set) var userIsOn: Bool? {
         didSet {
@@ -276,9 +317,9 @@ public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
 
     public var trackingEnabled: Bool { return listenerToken != nil }
 
-    public var trackingTolerence = CLLocationDistance(0) // meters
+    public var trackingTolerence = Meters(0)
 
-    public func enableTracking(withTolerence: CLLocationDistance) {
+    public func enableTracking(withTolerence: Meters) {
         trackingTolerence = withTolerence
         if listenerToken == nil {
             if let userLocation = UserLocation.instance.currentLocation {
