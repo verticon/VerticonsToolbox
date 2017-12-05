@@ -276,7 +276,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         
         super.layoutSubviews()
         
-        if var imageFrame = imageView?.frame, var labelFrame = titleLabel?.frame, let count = titleLabel?.text?.characters.count {
+        if var imageFrame = imageView?.frame, var labelFrame = titleLabel?.frame, let count = titleLabel?.text?.count {
             
             if (count > 0) {
                 labelFrame.origin.x = contentEdgeInsets.left

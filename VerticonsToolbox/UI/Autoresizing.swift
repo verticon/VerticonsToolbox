@@ -16,7 +16,7 @@ extension UIViewAutoresizing : CustomStringConvertible {
             var description = ""
             for (i, value) in UIViewAutoresizing.values.enumerated() {
                 if contains(value) {
-                    if description.characters.count > 0 { description += "|" }
+                    if description.count > 0 { description += "|" }
                     description += UIViewAutoresizing.names[i]
                 }
             }

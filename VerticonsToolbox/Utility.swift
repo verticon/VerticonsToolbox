@@ -53,18 +53,15 @@ public var GlobalBackgroundQueue: DispatchQueue {
  center.addNotificationRequest(request)
  */
 public func notifyUser(_ message:  String) {
-    if hasNotifyPermission() {
-        let content = UNMutableNotificationContent()
-        content.body = message;
-        content.sound = UNNotificationSound.default()
-        let request = UNNotificationRequest(identifier: "\(arc4random())", content: content, trigger: nil)
-        UNUserNotificationCenter.current().add(request)
+    UNUserNotificationCenter.current().getNotificationSettings { settings in
+        if settings.authorizationStatus == .authorized && settings.alertSetting == .enabled {
+            let content = UNMutableNotificationContent()
+            content.body = message;
+            if settings.soundSetting == .enabled { content.sound = UNNotificationSound.default() }
+            let request = UNNotificationRequest(identifier: "\(arc4random())", content: content, trigger: nil)
+            UNUserNotificationCenter.current().add(request)
+        }
     }
-}
-
-public func hasNotifyPermission() -> Bool {
-    let currentSettings = UIApplication.shared.currentUserNotificationSettings
-    return currentSettings!.types.contains(.alert) && currentSettings!.types.contains(.sound)
 }
 
 public func alertUser(title: String?, body: String?, handler: ((UIAlertAction) -> Void)? = nil) {
@@ -140,8 +137,8 @@ public var applicationName: String = {
 public func increaseIndent(_ original: String) -> String {
     var modified = original.replacingOccurrences(of: "\n", with: "\n\t")
     modified.insert("\t", at: modified.startIndex)
-    if modified.characters.last == "\t" {
-        modified.remove(at: modified.characters.index(before: modified.endIndex))
+    if modified.last == "\t" {
+        modified.remove(at: modified.index(before: modified.endIndex))
     }
     return modified
 }
