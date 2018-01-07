@@ -181,12 +181,12 @@ public extension MKPolyline {
 }
 
 public enum UserTrackingPolylineEvent {
-    case userIsOnChanged(UserTrackingPolyLine)
-    case userPositionChanged(UserTrackingPolyLine) // Position changes are only broadcast if the user is on
-    case trackingDisabled(UserTrackingPolyLine)
+    case userIsOnChanged(UserTrackingPolyline)
+    case userPositionChanged(UserTrackingPolyline) // Position changes are only broadcast if the user is on
+    case trackingDisabled(UserTrackingPolyline)
 }
 
-public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
+public class UserTrackingPolyline : Broadcaster<UserTrackingPolylineEvent> {
 
     public class Renderer : MKPolylineRenderer {
         
@@ -253,7 +253,7 @@ public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
         }
         // *************************************************************************************************
 
-        fileprivate func subscribe(to: UserTrackingPolyLine) {
+        fileprivate func subscribe(to: UserTrackingPolyline) {
             _ = to.addListener(self, handlerClassMethod: Renderer.userTrackingEventHandler)
         }
 
@@ -325,7 +325,7 @@ public class UserTrackingPolyLine : Broadcaster<UserTrackingPolylineEvent> {
             if let userLocation = UserLocation.instance.currentLocation {
                 userTrackingData = polyline.closestPoint(to: MKMapPointForCoordinate(userLocation.coordinate))
             }
-            listenerToken = UserLocation.instance.addListener(self, handlerClassMethod: UserTrackingPolyLine.userLocationEventHandler)
+            listenerToken = UserLocation.instance.addListener(self, handlerClassMethod: UserTrackingPolyline.userLocationEventHandler)
         }
     }
 

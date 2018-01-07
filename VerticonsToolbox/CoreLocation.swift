@@ -49,8 +49,8 @@ public func nameForRegionState(_ state: CLRegionState) -> String {
     }
 }
 
-public func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
-public func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+public func toRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+public func toDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
 
 // Note: I tried to define the UserLocationEvent enum within the UserLocation class (i.e. UserLocation.Event)
 // but a trap occurred on the line which initializes the static instance - I think the Broadcaster caused it.
@@ -147,11 +147,11 @@ public extension CLLocation {
     // Returns the positive, clockwise angle (0 -> 359.999) from this location to the other location.
     func bearing(to : CLLocation) -> Double {
         
-        let lat1 = degreesToRadians(degrees: self.coordinate.latitude)
-        let lon1 = degreesToRadians(degrees: self.coordinate.longitude)
+        let lat1 = toRadians(degrees: self.coordinate.latitude)
+        let lon1 = toRadians(degrees: self.coordinate.longitude)
         
-        let lat2 = degreesToRadians(degrees: to.coordinate.latitude)
-        let lon2 = degreesToRadians(degrees: to.coordinate.longitude)
+        let lat2 = toRadians(degrees: to.coordinate.latitude)
+        let lon2 = toRadians(degrees: to.coordinate.longitude)
         
         let dLon = lon2 - lon1
         
@@ -159,7 +159,7 @@ public extension CLLocation {
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
         let radiansBearing = atan2(y, x)
         
-        var degreeBearing = radiansToDegrees(radians: radiansBearing) // -180 to +180
+        var degreeBearing = toDegrees(radians: radiansBearing) // -180 to +180
         if degreeBearing < 0 { degreeBearing += 360 } // 0 to 360
 
         return degreeBearing

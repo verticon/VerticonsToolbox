@@ -119,12 +119,36 @@ public extension UIImageView {
             let scale = min(widthRatio, heightRatio)
             let scaledImageWidth = scale * imageSize.width
             let scaledImageHeight = scale * imageSize.height
-
+            
             return CGSize(width: scaledImageWidth, height: scaledImageHeight)
         }
         return CGSize.zero
     }
-
+    
+    public func aspectFillImageSize() -> CGSize {
+        if let image = self.image {
+            var imageSize = image.size
+            if imageSize.width < imageSize.height {
+                var scale = bounds.size.width / imageSize.width // Make the width fit exactly
+                imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
+                if imageSize.height < bounds.size.height { // If the height ended up too small then expand
+                    scale = bounds.size.height / imageSize.height
+                    imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
+                }
+            }
+            else {
+                var scale = bounds.size.height / imageSize.height  // Make the height fit exactly
+                imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
+                if imageSize.width < bounds.size.width { // If the width ended up too small then expand
+                    scale = bounds.size.width / imageSize.width
+                    imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
+                }
+            }
+            return imageSize
+        }
+        return CGSize.zero
+    }
+    
     public func setColor(_ newColor: UIColor) {
         if let image = self.image {
             self.image = image.withRenderingMode(.alwaysTemplate)
