@@ -107,47 +107,37 @@ public extension UIImage {
         
         return failureImage
     }
+
+    public func aspectFit(in: CGSize) -> CGSize {
+        let widthRatio = `in`.width / size.width
+        let heightRatio = `in`.height / size.height
+        let scale = min(widthRatio, heightRatio)
+        return CGSize(width: scale * size.width, height: scale * size.height)
+    }
+    
+    public func aspectFill(in: CGSize) -> CGSize {
+        var scaledSize = size
+        if scaledSize.width < scaledSize.height {
+            var scale = `in`.width / scaledSize.width // Make the width fit exactly
+            scaledSize = CGSize(width: scale * scaledSize.width, height: scale * scaledSize.height)
+            if scaledSize.height < `in`.height { // If the height ended up too small then expand
+                scale = `in`.height / scaledSize.height
+                scaledSize = CGSize(width: scale * scaledSize.width, height: scale * scaledSize.height)
+            }
+        }
+        else {
+            var scale = `in`.height / scaledSize.height  // Make the height fit exactly
+            scaledSize = CGSize(width: scale * scaledSize.width, height: scale * scaledSize.height)
+            if scaledSize.width < `in`.width { // If the width ended up too small then expand
+                scale = `in`.width / scaledSize.width
+                scaledSize = CGSize(width: scale * scaledSize.width, height: scale * scaledSize.height)
+            }
+        }
+        return scaledSize
+    }
 }
 
 public extension UIImageView {
-
-    public func aspectFitImageSize() -> CGSize {
-        if let image = self.image {
-            let imageSize = image.size
-            let widthRatio = bounds.size.width / imageSize.width
-            let heightRatio = bounds.size.height / imageSize.height
-            let scale = min(widthRatio, heightRatio)
-            let scaledImageWidth = scale * imageSize.width
-            let scaledImageHeight = scale * imageSize.height
-            
-            return CGSize(width: scaledImageWidth, height: scaledImageHeight)
-        }
-        return CGSize.zero
-    }
-    
-    public func aspectFillImageSize() -> CGSize {
-        if let image = self.image {
-            var imageSize = image.size
-            if imageSize.width < imageSize.height {
-                var scale = bounds.size.width / imageSize.width // Make the width fit exactly
-                imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
-                if imageSize.height < bounds.size.height { // If the height ended up too small then expand
-                    scale = bounds.size.height / imageSize.height
-                    imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
-                }
-            }
-            else {
-                var scale = bounds.size.height / imageSize.height  // Make the height fit exactly
-                imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
-                if imageSize.width < bounds.size.width { // If the width ended up too small then expand
-                    scale = bounds.size.width / imageSize.width
-                    imageSize = CGSize(width: scale * imageSize.width, height: scale * imageSize.height)
-                }
-            }
-            return imageSize
-        }
-        return CGSize.zero
-    }
     
     public func setColor(_ newColor: UIColor) {
         if let image = self.image {

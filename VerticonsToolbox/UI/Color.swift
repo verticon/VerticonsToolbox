@@ -19,4 +19,15 @@ public extension UIColor {
         UIGraphicsEndImageContext();
         return image!;
     }
+    
+    func lighten() -> UIColor { return adjustBrightness(by: 1.3)  }
+    
+    func darken() -> UIColor {  return adjustBrightness(by: 0.75)  }
+    
+    private func adjustBrightness(by: CGFloat) -> UIColor {
+        var hue, saturation, brightness, alpha : CGFloat
+        hue = 0.0; saturation = 0.0; brightness = 0.0; alpha = 0.0
+        getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        return UIColor(hue: hue, saturation: saturation, brightness: min(by * brightness, 1.0), alpha: alpha)
+    }
 }
