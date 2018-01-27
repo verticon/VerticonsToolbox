@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E10E23EE1E9BBBF100F27B67 /* Broadcaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */; };
 		E131E8661EA528BB00DC8863 /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E131E8651EA528BB00DC8863 /* CoreLocation.swift */; };
+		E13A760E2017DB3B002DC135 /* PromptUser.xib in Resources */ = {isa = PBXBuildFile; fileRef = E13A760D2017DB3B002DC135 /* PromptUser.xib */; };
 		E147F45D1EEAB7790026E5BC /* NumericType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E147F45C1EEAB7790026E5BC /* NumericType.swift */; };
 		E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */; };
 		E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */; };
@@ -18,6 +19,7 @@
 		E17AFEEB1FA203A100AFA1EA /* ICloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17AFEEA1FA203A100AFA1EA /* ICloud.swift */; };
 		E18222EF1F2F70F7008679C0 /* DisclosureIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18222EE1F2F70F7008679C0 /* DisclosureIndicator.swift */; };
 		E197043B1FA8C73900707B8C /* Layers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E197043A1FA8C73900707B8C /* Layers.swift */; };
+		E1A262552018C8C900AA8CD7 /* PromptUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A262542018C8C900AA8CD7 /* PromptUser.swift */; };
 		E1B2E5591E8F0C6A00B6FFC1 /* Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */; };
 		E1B762091E5DC68600B01E19 /* VerticonsToolbox.h in Headers */ = {isa = PBXBuildFile; fileRef = E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E1B762191E5DC76300B01E19 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762111E5DC76300B01E19 /* AlertController.swift */; };
@@ -43,6 +45,7 @@
 /* Begin PBXFileReference section */
 		E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Broadcaster.swift; sourceTree = "<group>"; };
 		E131E8651EA528BB00DC8863 /* CoreLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreLocation.swift; sourceTree = "<group>"; };
+		E13A760D2017DB3B002DC135 /* PromptUser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PromptUser.xib; path = UI/PromptUser.xib; sourceTree = "<group>"; };
 		E147F45C1EEAB7790026E5BC /* NumericType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericType.swift; sourceTree = "<group>"; };
 		E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HexadecimalKeypad.xib; path = UI/HexadecimalKeypad.xib; sourceTree = "<group>"; };
 		E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HexadecimalKeypad.swift; path = UI/HexadecimalKeypad.swift; sourceTree = "<group>"; };
@@ -52,6 +55,7 @@
 		E17AFEEA1FA203A100AFA1EA /* ICloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloud.swift; sourceTree = "<group>"; };
 		E18222EE1F2F70F7008679C0 /* DisclosureIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DisclosureIndicator.swift; path = UI/DisclosureIndicator.swift; sourceTree = "<group>"; };
 		E197043A1FA8C73900707B8C /* Layers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Layers.swift; path = UI/Layers.swift; sourceTree = "<group>"; };
+		E1A262542018C8C900AA8CD7 /* PromptUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PromptUser.swift; path = UI/PromptUser.swift; sourceTree = "<group>"; };
 		E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Encodable.swift; sourceTree = "<group>"; };
 		E1B762041E5DC68600B01E19 /* VerticonsToolbox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VerticonsToolbox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VerticonsToolbox.h; sourceTree = "<group>"; };
@@ -118,12 +122,12 @@
 				E15B51421F87C1A9009B8E38 /* MapKit.swift */,
 				E1B762241E5DC79200B01E19 /* Print.swift */,
 				E1F84E8E1EC8FABD00E9D924 /* String.swift */,
+				E1FCE7A21FC06606002F75AD /* Sounds.swift */,
 				E1B762261E5DC79200B01E19 /* Toolbox.storyboard */,
 				E1B762271E5DC79200B01E19 /* Utility.swift */,
 				E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */,
 				E1B7620F1E5DC72400B01E19 /* UI */,
 				E1B762101E5DC73500B01E19 /* Utilities */,
-				E1FCE7A21FC06606002F75AD /* Sounds.swift */,
 			);
 			path = VerticonsToolbox;
 			sourceTree = "<group>";
@@ -145,6 +149,8 @@
 				E15424D11E828CB300EFC780 /* UIFont.swift */,
 				E1B762171E5DC76300B01E19 /* View.swift */,
 				E1B762181E5DC76300B01E19 /* Window.swift */,
+				E13A760D2017DB3B002DC135 /* PromptUser.xib */,
+				E1A262542018C8C900AA8CD7 /* PromptUser.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -229,6 +235,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E13A760E2017DB3B002DC135 /* PromptUser.xib in Resources */,
 				E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */,
 				E1D0C39E1EC5F39F00A07D54 /* Media.xcassets in Resources */,
 				E1B7622B1E5DC79200B01E19 /* Toolbox.storyboard in Resources */,
@@ -258,6 +265,7 @@
 				E10E23EE1E9BBBF100F27B67 /* Broadcaster.swift in Sources */,
 				E1B762291E5DC79200B01E19 /* Print.swift in Sources */,
 				E15356E31E732BAC009C2C61 /* HexadecimalKeypad.swift in Sources */,
+				E1A262552018C8C900AA8CD7 /* PromptUser.swift in Sources */,
 				E15B51451F8C1B84009B8E38 /* Email.swift in Sources */,
 				E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */,
 				E147F45D1EEAB7790026E5BC /* NumericType.swift in Sources */,
