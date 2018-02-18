@@ -395,14 +395,14 @@ public class UserTrackingButton : UIView {
 
     @objc private func toggleUserTrackimg(_ sender: UITapGestureRecognizer) {
         trackingUser = !trackingUser
-        stateChangeHandler(trackingUser)
     }
 
-    public private(set) var trackingUser: Bool {
+    public var trackingUser: Bool {
         didSet {
             // If tracking then show the compass, else show the track user image
             compass.compassVisibility = trackingUser ? .visible : .hidden
             trackUser.isHidden = trackingUser
+            if (trackingUser != oldValue) { stateChangeHandler(trackingUser) }
         }
     }
 }
