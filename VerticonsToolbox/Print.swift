@@ -9,61 +9,89 @@ import Foundation
 
 open class FileLogger {
     
-    open static let instance: FileLogger? = { // Singleton
-        if let fileLoggingEnabled = Bundle.main.infoDictionary?["File logging enabled"] as? Bool {
-            if fileLoggingEnabled {
-                return FileLogger()
-            }
-        }
-        return nil
+    public static let instance: FileLogger? = {
+        guard let fileLoggingEnabled = Bundle.main.infoDictionary?["File logging enabled"] as? Bool, fileLoggingEnabled  else { return nil }
+        return FileLogger()
     }()
 
-    // ********************************************************************
 
-    fileprivate var queue: DispatchQueue!
-
-    fileprivate var filePtr: UnsafeMutablePointer<FILE>!
-    fileprivate var filePath: URL = {
+    fileprivate let fileUrl: URL = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM-dd-yyyy"
         let date = formatter.string(from: Date())
-        let fileName = "\(applicationName).\(date).log";
-        let pathes = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true);
-        return URL(fileURLWithPath: pathes[0]).appendingPathComponent(fileName)
+        
+        let name = "\(applicationName).\(date).log";
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        
+        return URL(fileURLWithPath: path).appendingPathComponent(name)
     }()
-
-    fileprivate var nextKey = 0
-    fileprivate var listeners: [Int : (String) -> ()] = [:]
-
-    // ********************************************************************
+    
+    fileprivate let filePtr: UnsafeMutablePointer<FILE>!
+    fileprivate let queue =  { DispatchQueue(label: "FileLoggerQueue", attributes: []) }()
 
     fileprivate init?() {
-        filePtr = fopen(filePath.path, "a")
-        if filePtr == nil {
-            return nil
-        }
-        queue = DispatchQueue(label: "FileLoggerQueue", attributes: []);
+        filePtr = fopen(fileUrl.path, "a")
+        if filePtr == nil { return nil }
+
+        cleanUp()
     }
 
     deinit {
-        if filePtr != nil {
-            fclose(filePtr)
+        if filePtr != nil { fclose(filePtr) }
+    }
+
+    private func cleanUp() {
+        let manager = FileManager.default
+
+        let maximumDays = 10.0
+        let minimumDate = Date().addingTimeInterval(-maximumDays*24*60*60)
+        
+        iterateLogFiles() { logFileUrl in
+            do {
+                let creationDate = try manager.attributesOfItem(atPath: logFileUrl.path)[FileAttributeKey.creationDate] as! Date
+                if creationDate < minimumDate { try manager.removeItem(atPath: logFileUrl.path) }
+            }
+            catch { fputs("Cannot remove log file \(logFileUrl.path): \(error)", self.filePtr) }
         }
     }
 
-    // ********************************************************************
+    private func iterateLogFiles(_ process: (URL) -> ()) {
+        do {
+            let manager = FileManager.default
+            let documentDirUrl = try manager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            for logFileUrl in try manager.contentsOfDirectory(at: documentDirUrl, includingPropertiesForKeys: nil) {
+                let logFileName = logFileUrl.lastPathComponent
+                if logFileName.hasPrefix(applicationName) && logFileName.hasSuffix("log") { process(logFileUrl) }
+            }
+        }
+        catch { fputs("Cannot iterate log files: \(error)", self.filePtr) }
+    }
 
-    func print(_ message: String) {
+    public func package() -> [String : Data] {
+        var package = [String : Data]()
+        iterateLogFiles() { logFileUrl in
+            package[logFileUrl.lastPathComponent] = {
+                do {  return try Data(contentsOf: logFileUrl) }
+                catch { return "Cannot create Data from \(logFileUrl): \(error)".data(using: .utf8) ?? Data() }
+            }()
+        }
+        return package
+    }
+
+    public func print(_ message: String) {
         queue.async {
             fputs(message, self.filePtr)
-            
-            for listener in self.listeners.values {
-                listener(message)
-            }
-
+            for listener in self.listeners.values { listener(message) }
             fflush(self.filePtr)
         }
     }
+
+    // *******************************************************
+    // Listeners
+    // *******************************************************
+
+    fileprivate var nextKey = 0
+    fileprivate var listeners: [Int : (String) -> ()] = [:]
 
     // The specified listener should already be prepared to handle the delivery of the initial contents
     // of the log file. It is possible for that delivery to occur before the addListener method returns.
@@ -71,14 +99,8 @@ open class FileLogger {
         let key = nextKey; nextKey += 1
         queue.async {
             self.listeners[key] = listener
-
-            do {
-                let contents = try String(contentsOfFile: self.filePath.path)
-                listener(contents)
-            }
-            catch {
-                fputs("An exception occurred during the loading of the log file's initial content", self.filePtr)
-            }
+            do { listener(try String(contentsOfFile: self.fileUrl.path)) }
+            catch { fputs("Cannot read log file \(self.fileUrl.path): \(error)", self.filePtr) }
         }
         return key
     }
@@ -88,15 +110,16 @@ open class FileLogger {
     }
 }
 
+private let elapsedTime = ElapsedTime()
+private let consoleLoggingEnabled = Bundle.main.infoDictionary?["Console logging enabled"] as? Bool
+
 public func print(_ message: String) {
-    struct Statics {
-        static let elapsedTime = ElapsedTime()
-    }
+    
+    let text = "\(elapsedTime) \(message)\n\r"
 
-    let text = "\(Statics.elapsedTime) \(message)\n\r"
-    fputs(text, stdout)
+    var consoleEnabled = true
+    if let enabled = consoleLoggingEnabled { consoleEnabled = enabled }
+    if consoleEnabled { fputs(text, stdout) }
 
-    if let logger = FileLogger.instance {
-        logger.print(text)
-    }
+    FileLogger.instance?.print(text)
 }

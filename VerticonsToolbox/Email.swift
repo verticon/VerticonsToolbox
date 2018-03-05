@@ -18,7 +18,7 @@ public class Email : NSObject {
     
     private override init() { super.init() }
 
-    public func send(to: [String], subject: String, message: String, presenter: UIViewController) -> Bool {
+    public func send(to: [String], subject: String, message: String, attachments: [String : Data] = [:], presenter: UIViewController) -> Bool {
         
         guard  MFMailComposeViewController.canSendMail() else {
             alertUser(title: "Could Not Send Email", body: "Please check your e-mail configuration and try again.")
@@ -30,6 +30,7 @@ public class Email : NSObject {
         mailComposerVC.setToRecipients(to)
         mailComposerVC.setSubject(subject)
         mailComposerVC.setMessageBody(message, isHTML: false)
+        for attachment in attachments { mailComposerVC.addAttachmentData(attachment.value, mimeType: "text/plain", fileName: attachment.key)}
         
         presenter.present(mailComposerVC, animated: true, completion: nil)
         

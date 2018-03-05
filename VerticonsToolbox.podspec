@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VerticonsToolbox"
-  s.version      = "0.0.7"
+  s.version      = "0.0.8"
   s.summary      = "A collection of UI extensions, utility functions, etc."
 
   # This description is used to generate tags and improve search results.
@@ -108,7 +108,7 @@ Pod::Spec.new do |s|
 
   # s.resource  = "icon.png"
   # s.resources = "Resources/*.png"
-  s.resources  = "VerticonsToolbox/**/*.{xib,toolbox}"
+  s.resources  = "VerticonsToolbox/**/*.{xib,storyboard}"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
