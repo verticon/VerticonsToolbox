@@ -40,10 +40,10 @@ open class FileLogger {
         if filePtr != nil { fclose(filePtr) }
     }
 
+    public var maximumDays = 10.0
     private func cleanUp() {
         let manager = FileManager.default
 
-        let maximumDays = 10.0
         let minimumDate = Date().addingTimeInterval(-maximumDays*24*60*60)
         
         iterateLogFiles() { logFileUrl in
