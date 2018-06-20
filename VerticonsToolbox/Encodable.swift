@@ -26,7 +26,7 @@ public protocol Encodable {
 
 extension Array where Element == Encodable.Properties {
     public func decode<T:Encodable>(type: T.Type) -> [T] {
-        return flatMap{ T($0) }
+        return compactMap{ T($0) }
     }
 }
 
