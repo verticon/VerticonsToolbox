@@ -114,25 +114,9 @@ extension Date {
 
 // Other **************************************************************************
 
-public var applicationName: String = {
-    struct Name {
-        static let value = Name()
-        
-        let text: String
-        
-        init() {
-            if let name = Bundle.main.infoDictionary?["CFBundleName"] {
-                text = name as! String
-            }
-            else {
-                text = "<UnknownAppliction>"
-            }
+public let applicationName = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "<UnknownAppliction>"
 
-        }
-    }
-
-    return Name.value.text
-}()
+public let runningOnSimulator = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"] != nil
 
 public func increaseIndent(_ original: String) -> String {
     var modified = original.replacingOccurrences(of: "\n", with: "\n\t")

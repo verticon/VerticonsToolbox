@@ -108,7 +108,7 @@ Pod::Spec.new do |s|
 
   # s.resource  = "icon.png"
   # s.resources = "Resources/*.png"
-  s.resources  = "VerticonsToolbox/**/*.{xib,storyboard}"
+  s.resources  = "VerticonsToolbox/**/*.{xib,storyboard,xcassets}"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
