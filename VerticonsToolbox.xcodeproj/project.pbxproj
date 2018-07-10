@@ -33,7 +33,7 @@
 		E1B762221E5DC77100B01E19 /* BidirectionalDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762211E5DC77100B01E19 /* BidirectionalDictionary.swift */; };
 		E1B762281E5DC79200B01E19 /* LogFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762231E5DC79200B01E19 /* LogFileViewController.swift */; };
 		E1B762291E5DC79200B01E19 /* Print.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762241E5DC79200B01E19 /* Print.swift */; };
-		E1B7622B1E5DC79200B01E19 /* Toolbox.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1B762261E5DC79200B01E19 /* Toolbox.storyboard */; };
+		E1B7622B1E5DC79200B01E19 /* LogFile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E1B762261E5DC79200B01E19 /* LogFile.storyboard */; };
 		E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B762271E5DC79200B01E19 /* Utility.swift */; };
 		E1BED7741ECC6FC7004A32D0 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BED7731ECC6FC7004A32D0 /* Data.swift */; };
 		E1BED7761ECDFA08004A32D0 /* Switches.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BED7751ECDFA08004A32D0 /* Switches.swift */; };
@@ -71,7 +71,7 @@
 		E1B762211E5DC77100B01E19 /* BidirectionalDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BidirectionalDictionary.swift; path = Utilities/BidirectionalDictionary.swift; sourceTree = "<group>"; };
 		E1B762231E5DC79200B01E19 /* LogFileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFileViewController.swift; sourceTree = "<group>"; };
 		E1B762241E5DC79200B01E19 /* Print.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Print.swift; sourceTree = "<group>"; };
-		E1B762261E5DC79200B01E19 /* Toolbox.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Toolbox.storyboard; sourceTree = "<group>"; };
+		E1B762261E5DC79200B01E19 /* LogFile.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LogFile.storyboard; sourceTree = "<group>"; };
 		E1B762271E5DC79200B01E19 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		E1BED7731ECC6FC7004A32D0 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		E1BED7751ECDFA08004A32D0 /* Switches.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Switches.swift; path = UI/Switches.swift; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 				E1B762241E5DC79200B01E19 /* Print.swift */,
 				E1F84E8E1EC8FABD00E9D924 /* String.swift */,
 				E1FCE7A21FC06606002F75AD /* Sounds.swift */,
-				E1B762261E5DC79200B01E19 /* Toolbox.storyboard */,
+				E1B762261E5DC79200B01E19 /* LogFile.storyboard */,
 				E1B762271E5DC79200B01E19 /* Utility.swift */,
 				E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */,
 				E1B7620F1E5DC72400B01E19 /* UI */,
@@ -238,7 +238,7 @@
 				E13A760E2017DB3B002DC135 /* PromptUser.xib in Resources */,
 				E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */,
 				E1D0C39E1EC5F39F00A07D54 /* Media.xcassets in Resources */,
-				E1B7622B1E5DC79200B01E19 /* Toolbox.storyboard in Resources */,
+				E1B7622B1E5DC79200B01E19 /* LogFile.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
