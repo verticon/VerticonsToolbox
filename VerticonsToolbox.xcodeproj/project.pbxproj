@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		E10E23EE1E9BBBF100F27B67 /* Broadcaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */; };
 		E131E8661EA528BB00DC8863 /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E131E8651EA528BB00DC8863 /* CoreLocation.swift */; };
+		E135E6ED214A851F00E6B7E5 /* Bezier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E135E6EA214A851F00E6B7E5 /* Bezier.swift */; };
+		E135E6EE214A851F00E6B7E5 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E135E6EB214A851F00E6B7E5 /* Geometry.swift */; };
+		E135E6EF214A851F00E6B7E5 /* BezierString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E135E6EC214A851F00E6B7E5 /* BezierString.swift */; };
 		E13A760E2017DB3B002DC135 /* PromptUser.xib in Resources */ = {isa = PBXBuildFile; fileRef = E13A760D2017DB3B002DC135 /* PromptUser.xib */; };
 		E147F45D1EEAB7790026E5BC /* NumericType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E147F45C1EEAB7790026E5BC /* NumericType.swift */; };
 		E15356E11E73104A009C2C61 /* HexadecimalKeypad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */; };
@@ -45,6 +48,9 @@
 /* Begin PBXFileReference section */
 		E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Broadcaster.swift; sourceTree = "<group>"; };
 		E131E8651EA528BB00DC8863 /* CoreLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreLocation.swift; sourceTree = "<group>"; };
+		E135E6EA214A851F00E6B7E5 /* Bezier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bezier.swift; sourceTree = "<group>"; };
+		E135E6EB214A851F00E6B7E5 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		E135E6EC214A851F00E6B7E5 /* BezierString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BezierString.swift; sourceTree = "<group>"; };
 		E13A760D2017DB3B002DC135 /* PromptUser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PromptUser.xib; path = UI/PromptUser.xib; sourceTree = "<group>"; };
 		E147F45C1EEAB7790026E5BC /* NumericType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericType.swift; sourceTree = "<group>"; };
 		E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = HexadecimalKeypad.xib; path = UI/HexadecimalKeypad.xib; sourceTree = "<group>"; };
@@ -91,6 +97,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E135E6E9214A836800E6B7E5 /* BezierString */ = {
+			isa = PBXGroup;
+			children = (
+				E135E6EA214A851F00E6B7E5 /* Bezier.swift */,
+				E135E6EC214A851F00E6B7E5 /* BezierString.swift */,
+				E135E6EB214A851F00E6B7E5 /* Geometry.swift */,
+			);
+			path = BezierString;
+			sourceTree = "<group>";
+		};
 		E1B761FA1E5DC68600B01E19 = {
 			isa = PBXGroup;
 			children = (
@@ -111,6 +127,7 @@
 		E1B762061E5DC68600B01E19 /* VerticonsToolbox */ = {
 			isa = PBXGroup;
 			children = (
+				E135E6E9214A836800E6B7E5 /* BezierString */,
 				E1B762081E5DC68600B01E19 /* Info.plist */,
 				E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */,
 				E131E8651EA528BB00DC8863 /* CoreLocation.swift */,
@@ -259,6 +276,7 @@
 				E131E8661EA528BB00DC8863 /* CoreLocation.swift in Sources */,
 				E1B7621B1E5DC76300B01E19 /* Autoresizing.swift in Sources */,
 				E1B7621D1E5DC76300B01E19 /* Color.swift in Sources */,
+				E135E6EF214A851F00E6B7E5 /* BezierString.swift in Sources */,
 				E18222EF1F2F70F7008679C0 /* DisclosureIndicator.swift in Sources */,
 				E15B51431F87C1A9009B8E38 /* MapKit.swift in Sources */,
 				E1B7621F1E5DC76300B01E19 /* View.swift in Sources */,
@@ -268,6 +286,8 @@
 				E1A262552018C8C900AA8CD7 /* PromptUser.swift in Sources */,
 				E15B51451F8C1B84009B8E38 /* Email.swift in Sources */,
 				E1F84E8F1EC8FABD00E9D924 /* String.swift in Sources */,
+				E135E6EE214A851F00E6B7E5 /* Geometry.swift in Sources */,
+				E135E6ED214A851F00E6B7E5 /* Bezier.swift in Sources */,
 				E147F45D1EEAB7790026E5BC /* NumericType.swift in Sources */,
 				E1B7622C1E5DC79200B01E19 /* Utility.swift in Sources */,
 				E15424D21E828CB300EFC780 /* UIFont.swift in Sources */,
