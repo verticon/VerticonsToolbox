@@ -38,7 +38,7 @@ extension Bezier {
 	- parameter align: text alignment, default is .Center
 	- parameter y: y offset above or below the centerline in units of line height, default is 0
 	*/
-	func draw(attributed string: NSAttributedString,
+	public func draw(attributed string: NSAttributedString,
 	          to context: CGContext,
 	          align alignment: NSTextAlignment = .center,
 	          y offset: CGFloat = 0, fitWidth: Bool = false) {

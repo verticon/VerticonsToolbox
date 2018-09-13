@@ -52,7 +52,7 @@ class Box<T> {
 
 /// Contains a list of Bezier Curves
 
-struct Bezier {
+public struct Bezier {
 	
 	/// Bezier Curve of the n-th order
 	struct Curve {
@@ -73,7 +73,7 @@ struct Bezier {
 	fileprivate let curves: [Curve]
 	
 	/// - parameter path: UIBezierPath - preferably continuous
-	init(path: CGPath) {
+	public init(path: CGPath) {
 		
 		self.path = path
 		
