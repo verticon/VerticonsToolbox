@@ -30,7 +30,7 @@ public class ICloud : NSObject {
         
         tempFileUrl = URL(fileURLWithPath: name, relativeTo: FileManager.default.temporaryDirectory)
         do { try contents.write(to: tempFileUrl, atomically: true, encoding: .utf8) }
-        catch { callback(.error("Cannot write temp file \(tempFileUrl)", error)) }
+        catch { callback(.error("Cannot write temp file \(String(describing: tempFileUrl))", error)) }
 
         let picker = UIDocumentPickerViewController(url: tempFileUrl, in: .exportToService)
         present(picker: picker, presenter: documentPickerPresenter, callback: callback)
@@ -61,7 +61,7 @@ extension ICloud : UIDocumentPickerDelegate {
             callback(.success(urls[0], nil))
 
             do { try FileManager.default.removeItem(at: tempFileUrl) }
-            catch { print("Cannot remove temp file \(tempFileUrl): \(error)") }
+            catch { print("Cannot remove temp file \(String(describing: tempFileUrl)): \(error)") }
 
         default:
             callback(.error("Unexpected document picker mode; raw value = \(controller.documentPickerMode.rawValue)", nil))
