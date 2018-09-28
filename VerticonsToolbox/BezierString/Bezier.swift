@@ -30,7 +30,7 @@ import UIKit
 extension CGPath {
 	
 	typealias Applier = @convention(block) (UnsafePointer<CGPathElement>) -> ()
-	func forEach(_ applier: Applier) {
+	func forEach(_ applier: @escaping Applier) {
 		
 		let callback: CGPathApplierFunction = { (info, element) in
 			let applier = unsafeBitCast(info, to: Applier.self)
