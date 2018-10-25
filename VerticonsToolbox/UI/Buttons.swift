@@ -71,29 +71,29 @@ public class RadioButton: UIButton {
     
     public var listener: ((Bool) -> Void)?
 
-    internal var bevelLayer = CAShapeLayer()
-    internal var buttonLayer = CAShapeLayer()
+    private var bezelLayer = CAShapeLayer()
+    private var buttonLayer = CAShapeLayer()
     
     
-    @IBInspectable public var bezelColor: UIColor = UIColor.lightGray {
+    @IBInspectable @objc dynamic public var bezelColor: UIColor = UIColor.lightGray {
         didSet {
-            bevelLayer.strokeColor = bezelColor.cgColor
+            bezelLayer.strokeColor = bezelColor.cgColor
         }
     }
 
-    @IBInspectable public var bezelWidth: CGFloat = 2.0 {
+    @IBInspectable @objc dynamic public var bezelWidth: CGFloat = 2.0 {
         didSet {
             layoutSubLayers()
         }
     }
 
-    @IBInspectable public var bezelButtonGap: CGFloat = 4.0 {
+    @IBInspectable @objc dynamic public var bezelButtonGap: CGFloat = 4.0 {
         didSet {
             layoutSubLayers()
         }
     }
 
-    @IBInspectable public var buttonColor: UIColor = UIColor.lightGray {
+    @IBInspectable @objc dynamic public var buttonColor: UIColor = UIColor.lightGray {
         didSet {
             indicateButtonState()
         }
@@ -117,11 +117,11 @@ public class RadioButton: UIButton {
     }
 
     private func initialize() {
-        bevelLayer.frame = bounds
-        bevelLayer.lineWidth = bezelWidth
-        bevelLayer.fillColor = UIColor.clear.cgColor
-        bevelLayer.strokeColor = bezelColor.cgColor
-        layer.addSublayer(bevelLayer)
+        bezelLayer.frame = bounds
+        bezelLayer.lineWidth = bezelWidth
+        bezelLayer.fillColor = UIColor.clear.cgColor
+        bezelLayer.strokeColor = bezelColor.cgColor
+        layer.addSublayer(bezelLayer)
         
         buttonLayer.frame = bounds
         buttonLayer.lineWidth = bezelWidth
@@ -182,9 +182,9 @@ public class RadioButton: UIButton {
     }
     
     private func layoutSubLayers() {
-        bevelLayer.frame = bounds
-        bevelLayer.lineWidth = bezelWidth
-        bevelLayer.path = bezelPath.cgPath
+        bezelLayer.frame = bounds
+        bezelLayer.lineWidth = bezelWidth
+        bezelLayer.path = bezelPath.cgPath
         
         buttonLayer.frame = bounds
         buttonLayer.lineWidth = bezelWidth
@@ -192,7 +192,7 @@ public class RadioButton: UIButton {
     }
     
     private func indicateButtonState() {
-        buttonLayer.fillColor = isPressed ? bezelColor.cgColor : UIColor.clear.cgColor
+        buttonLayer.fillColor = isPressed ? buttonColor.cgColor : UIColor.clear.cgColor
     }
 
    override public func layoutSubviews() {
@@ -298,7 +298,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         toggle(sender: self)
     }
 
-    public var color : UIColor = UIColor.gray {
+    @IBInspectable @objc dynamic public var color : UIColor = UIColor.gray {
         didSet {
             if let image = imageView?.image {
                 setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)

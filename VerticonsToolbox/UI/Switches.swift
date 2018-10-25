@@ -68,11 +68,18 @@ public class VerticallyCenteredTextLayer : CATextLayer {
         titleLayer.bounds = bounds
     }
     
-    @IBInspectable public var titleColorEnabled: UIColor = UIColor.darkGray
+    @IBInspectable @objc dynamic public var titleColorEnabled: UIColor = UIColor.darkGray {
+        didSet {
+            titleLayer.foregroundColor = titleColorEnabled.cgColor
+        }
+    }
     
-    @IBInspectable public var titleColorDisabled: UIColor = UIColor.lightGray
- 
-    
+    @IBInspectable @objc dynamic public var titleColorDisabled: UIColor = UIColor.lightGray {
+        didSet {
+            titleLayer.foregroundColor = titleColorDisabled.cgColor
+        }
+    }
+
     override public var isEnabled: Bool {
         get {
             return super.isEnabled

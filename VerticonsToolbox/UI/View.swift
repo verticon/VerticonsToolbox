@@ -98,8 +98,8 @@ public extension UIView {
 }
 
 @IBDesignable open class GradientView: UIView {
-    @IBInspectable public var firstColor = UIColor.white
-    @IBInspectable public var secondColor = UIColor.black
+    @IBInspectable @objc dynamic public var firstColor = UIColor.white
+    @IBInspectable @objc dynamic public var secondColor = UIColor.black
     
     override open class var layerClass: AnyClass {
         return CAGradientLayer.self
