@@ -114,8 +114,14 @@ private let elapsedTime = ElapsedTime()
 private let consoleLoggingEnabled = Bundle.main.infoDictionary?["Console logging enabled"] as? Bool
 
 public func print(_ message: String) {
-    
-    let text = "\(elapsedTime) \(message)\n\r"
+    var message = message
+    var prefix = ""
+    while message.hasPrefix("\n") {
+        message.removeFirst()
+        prefix += "\n"
+    }
+
+    let text = "\(prefix)\(elapsedTime) \(message)\n"
 
     var consoleEnabled = true
     if let enabled = consoleLoggingEnabled { consoleEnabled = enabled }
