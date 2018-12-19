@@ -11,17 +11,31 @@ public class LogFileViewController: UIViewController {
     
     @IBOutlet weak var textView: UITextView!
 
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
     override public func viewWillAppear(_ animated: Bool) {
         _ = FileLogger.instance?.addListener(logFileListener)
     }
 
-    override public func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func email(_sender: UIButton) {
+        _ = Email.sender.send(to: nil, subject: "Log File", message: self.textView.text, presenter: self)
+    }
+
+    private let iCloud = ICloud()
+    @IBAction func iCloud(_sender: UIButton) {
+        let prompt = PromptUser("Enter a log file name") {
+            if let name = $0 {
+                self.iCloud.exportFile(contents: self.textView.text, name: name, documentPickerPresenter: self) { status in
+                    switch status {
+                    case .success(let url): break
+                        
+                    case .error(let description, let error):
+                        alertUser(title: "Cannot Save To iCloud", body: "\(description): \(String(describing: error))")
+                        
+                    case .cancelled: break
+                    }
+                }
+            }
+        }
+        present(prompt, animated: true)
     }
 
     fileprivate func logFileListener(_ newEntry: String) {

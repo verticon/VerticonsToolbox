@@ -160,14 +160,14 @@
 				E18222EE1F2F70F7008679C0 /* DisclosureIndicator.swift */,
 				E15356E21E732BAC009C2C61 /* HexadecimalKeypad.swift */,
 				E15356E01E73104A009C2C61 /* HexadecimalKeypad.xib */,
-				E197043A1FA8C73900707B8C /* Layers.swift */,
 				E1B762161E5DC76300B01E19 /* Image.swift */,
+				E197043A1FA8C73900707B8C /* Layers.swift */,
+				E1A262542018C8C900AA8CD7 /* PromptUser.swift */,
+				E13A760D2017DB3B002DC135 /* PromptUser.xib */,
 				E1BED7751ECDFA08004A32D0 /* Switches.swift */,
 				E15424D11E828CB300EFC780 /* UIFont.swift */,
 				E1B762171E5DC76300B01E19 /* View.swift */,
 				E1B762181E5DC76300B01E19 /* Window.swift */,
-				E13A760D2017DB3B002DC135 /* PromptUser.xib */,
-				E1A262542018C8C900AA8CD7 /* PromptUser.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";

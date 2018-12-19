@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,16 +22,42 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="DgI-9E-1A7">
-                                <rect key="frame" x="1" y="72" width="371" height="587"/>
+                                <rect key="frame" x="1" y="72" width="371" height="549"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="rix-Xv-G8u">
+                                <rect key="frame" x="24" y="629" width="327" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MEi-1F-3I8">
+                                        <rect key="frame" x="0.0" y="0.0" width="37" height="30"/>
+                                        <state key="normal" title="Email">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="emailWith_sender:" destination="6On-yu-01T" eventType="touchUpInside" id="aST-sm-o0G"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aGr-wZ-cZh">
+                                        <rect key="frame" x="283" y="0.0" width="44" height="30"/>
+                                        <state key="normal" title="iCloud">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="iCloudWith_sender:" destination="6On-yu-01T" eventType="touchUpInside" id="J5K-AV-xQq"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="rix-Xv-G8u" secondAttribute="trailing" constant="8" id="51m-pv-n5b"/>
                             <constraint firstAttribute="trailingMargin" secondItem="DgI-9E-1A7" secondAttribute="trailing" constant="-13" id="FNF-2I-OUO"/>
-                            <constraint firstItem="MLH-ui-Tsw" firstAttribute="top" secondItem="DgI-9E-1A7" secondAttribute="bottom" constant="8" symbolic="YES" id="LRa-cB-bjy"/>
                             <constraint firstItem="DgI-9E-1A7" firstAttribute="top" secondItem="h6a-HW-RjF" secondAttribute="bottom" constant="8" symbolic="YES" id="M9U-uL-5oc"/>
+                            <constraint firstItem="MLH-ui-Tsw" firstAttribute="top" secondItem="rix-Xv-G8u" secondAttribute="bottom" constant="8" id="Oeh-Ea-lzp"/>
+                            <constraint firstItem="rix-Xv-G8u" firstAttribute="top" secondItem="DgI-9E-1A7" secondAttribute="bottom" constant="8" id="RJM-nm-l8m"/>
+                            <constraint firstItem="rix-Xv-G8u" firstAttribute="leading" secondItem="hOL-pp-qJP" secondAttribute="leadingMargin" constant="8" id="XgU-RM-0xt"/>
                             <constraint firstItem="DgI-9E-1A7" firstAttribute="leading" secondItem="hOL-pp-qJP" secondAttribute="leadingMargin" constant="-15" id="hXZ-uG-GpF"/>
                         </constraints>
                     </view>
@@ -42,7 +68,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zCS-FY-aG3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1358" y="1046"/>
+            <point key="canvasLocation" x="1357.5999999999999" y="1045.7271364317842"/>
         </scene>
         <!--Log File Navigation-->
         <scene sceneID="7es-Fa-rWq">
