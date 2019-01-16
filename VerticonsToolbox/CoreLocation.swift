@@ -191,7 +191,7 @@ extension CLLocationCoordinate2D : CustomStringConvertible {
 public func makeRect(center: CLLocationCoordinate2D, span: MKCoordinateSpan) -> MKMapRect {
     let northWestCornerCoordinate = CLLocationCoordinate2D(latitude: center.latitude + span.latitudeDelta/2, longitude: center.longitude - span.longitudeDelta/2)
     let southEastCornetCoordinate = CLLocationCoordinate2D(latitude: center.latitude - span.latitudeDelta/2, longitude: center.longitude + span.longitudeDelta/2)
-    let upperLeftCornerPoint = MKMapPointForCoordinate(northWestCornerCoordinate)
-    let lowerRightCornerPoint = MKMapPointForCoordinate(southEastCornetCoordinate)
-    return MKMapRectMake(upperLeftCornerPoint.x, upperLeftCornerPoint.y, lowerRightCornerPoint.x - upperLeftCornerPoint.x, lowerRightCornerPoint.y - upperLeftCornerPoint.y)
+    let upperLeftCornerPoint = MKMapPoint(northWestCornerCoordinate)
+    let lowerRightCornerPoint = MKMapPoint(southEastCornetCoordinate)
+    return MKMapRect(x: upperLeftCornerPoint.x, y: upperLeftCornerPoint.y, width: lowerRightCornerPoint.x - upperLeftCornerPoint.x, height: lowerRightCornerPoint.y - upperLeftCornerPoint.y)
 }

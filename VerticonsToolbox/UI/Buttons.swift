@@ -8,7 +8,7 @@
 import UIKit
 
 public extension UIButton {
-    public func setBackgroundColor(_ color: UIColor?, forState state: UIControlState) {
+    public func setBackgroundColor(_ color: UIColor?, forState state: UIControl.State) {
         if let color = color {
             setBackgroundImage(color.toImage(), for: state)
         }
@@ -22,7 +22,7 @@ public extension UIButton {
 open class ColoredButton: UIButton {
     @IBInspectable open var color: UIColor? {
         didSet {
-            setBackgroundColor(color, forState: UIControlState())
+            setBackgroundColor(color, forState: .normal)
         }
     }
     
@@ -289,7 +289,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         }
     }
     
-    public override func setTitle(_ title: String?, for state: UIControlState) {
+    public override func setTitle(_ title: String?, for state: UIControl.State) {
         super.setTitle(title, for: state)
         sizeToFit()
     }

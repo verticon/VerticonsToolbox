@@ -348,7 +348,7 @@ extension CGRect {
 	}
 	
 	public func insetWith(_ insets: UIEdgeInsets) -> CGRect {
-		return UIEdgeInsetsInsetRect(self, insets)
+		return self.inset(by: insets)
 	}
 	
 	

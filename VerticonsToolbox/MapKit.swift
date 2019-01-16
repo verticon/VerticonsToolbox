@@ -32,10 +32,10 @@ public func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordina
         
         let latitudeDelta = northmost - southmost
         let longitudeDelta = eastmost - westmost
-        let span = MKCoordinateSpanMake(latitudeDelta, longitudeDelta)
+        let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
         let midPoint = CLLocationCoordinate2DMake(southmost + latitudeDelta/2, westmost + longitudeDelta/2)
         
-        return MKCoordinateRegionMake(midPoint, span)
+        return MKCoordinateRegion(center: midPoint, span: span)
     }
     return nil
 }
@@ -107,15 +107,15 @@ public extension MKCoordinateRegion {
 public extension MKMapRect {
     
     var midPoint: MKMapPoint {
-        return MKMapPoint(x: MKMapRectGetMidX(self), y: MKMapRectGetMidY(self))
+        return MKMapPoint(x: midX, y: midY)
     }
     
     var corners: [MKMapPoint] {
         var corners = [MKMapPoint]()
         corners.append(origin)
-        corners.append(MKMapPointMake(origin.x + size.width, origin.y))
-        corners.append(MKMapPointMake(origin.x + size.width, origin.y + size.height))
-        corners.append(MKMapPointMake(origin.x, origin.y + size.height))
+        corners.append(MKMapPoint(x: origin.x + size.width, y: origin.y))
+        corners.append(MKMapPoint(x: origin.x + size.width, y: origin.y + size.height))
+        corners.append(MKMapPoint(x: origin.x, y: origin.y + size.height))
         return corners
     }
 }
@@ -158,9 +158,9 @@ public extension MKPolyline {
             let ratio: Double = ((to.x - endPointA.x) * deltaX + (to.y - endPointA.y) * deltaY) / (deltaX * deltaX + deltaY * deltaY)
             if ratio < 0.0 { closest = endPointA }
             else if ratio > 1.0 { closest = endPointB }
-            else { closest = MKMapPointMake(endPointA.x + ratio * deltaX, endPointA.y + ratio * deltaY) }
+            else { closest = MKMapPoint(x: endPointA.x + ratio * deltaX, y: endPointA.y + ratio * deltaY) }
             
-            let distance = MKMetersBetweenMapPoints(closest, to)
+            let distance = closest.distance(to: to)
             if distance < distanceTo {
                 closestPoint = closest
                 distanceTo = distance
@@ -176,7 +176,7 @@ public extension MKPolyline {
     }
 
     public var  boundingRegion: MKCoordinateRegion {
-        return MKCoordinateRegionForMapRect(boundingMapRect)
+        return MKCoordinateRegion(boundingMapRect)
     }
 }
 
@@ -323,7 +323,7 @@ public class UserTrackingPolyline : Broadcaster<UserTrackingPolylineEvent> {
         trackingTolerence = withTolerence
         if listenerToken == nil {
             if let userLocation = UserLocation.instance.currentLocation {
-                userTrackingData = polyline.closestPoint(to: MKMapPointForCoordinate(userLocation.coordinate))
+                userTrackingData = polyline.closestPoint(to: MKMapPoint(userLocation.coordinate))
             }
             listenerToken = UserLocation.instance.addListener(self, handlerClassMethod: UserTrackingPolyline.userLocationEventHandler)
         }
@@ -341,7 +341,7 @@ public class UserTrackingPolyline : Broadcaster<UserTrackingPolylineEvent> {
     private func userLocationEventHandler(event: UserLocationEvent) {
         switch event {
         case .locationUpdate(let userLocation):
-            userTrackingData = polyline.closestPoint(to: MKMapPointForCoordinate(userLocation.coordinate))
+            userTrackingData = polyline.closestPoint(to: MKMapPoint(userLocation.coordinate))
         default:
             break
         }

@@ -8,16 +8,16 @@
 
 import UIKit
 
-extension UIViewAutoresizing : CustomStringConvertible {
-    private static let values: [UIViewAutoresizing] = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleRightMargin, .flexibleBottomMargin, .flexibleLeftMargin]
+extension UIView.AutoresizingMask : CustomStringConvertible {
+    private static let values: [UIView.AutoresizingMask] = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleRightMargin, .flexibleBottomMargin, .flexibleLeftMargin]
     private static let names = ["None", "Width", "Height", "Top", "Right", "Bottom", "Left"]
     public var description : String {
         get {
             var description = ""
-            for (i, value) in UIViewAutoresizing.values.enumerated() {
+            for (i, value) in UIView.AutoresizingMask.values.enumerated() {
                 if contains(value) {
                     if description.count > 0 { description += "|" }
-                    description += UIViewAutoresizing.names[i]
+                    description += UIView.AutoresizingMask.names[i]
                 }
             }
             return description

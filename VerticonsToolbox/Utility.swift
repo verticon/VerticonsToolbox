@@ -57,7 +57,7 @@ public func notifyUser(_ message:  String) {
         if settings.authorizationStatus == .authorized && settings.alertSetting == .enabled {
             let content = UNMutableNotificationContent()
             content.body = message;
-            if settings.soundSetting == .enabled { content.sound = UNNotificationSound.default() }
+            if settings.soundSetting == .enabled { content.sound = UNNotificationSound.default }
             let request = UNNotificationRequest(identifier: "\(arc4random())", content: content, trigger: nil)
             UNUserNotificationCenter.current().add(request)
         }
@@ -65,8 +65,8 @@ public func notifyUser(_ message:  String) {
 }
 
 public func alertUser(title: String?, body: String?, handler: ((UIAlertAction) -> Void)? = nil) {
-    let alert = UIAlertController(title: title, message: body, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: handler))
+    let alert = UIAlertController(title: title, message: body, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: handler))
     alert.display()
 }
 
