@@ -42,7 +42,7 @@ public enum NumericType : CustomStringConvertible {
     
     /// The index of this numeric type in the NumericType.all array
     public var index: Int {
-        return NumericType.all.index { self == $0 }!
+        return NumericType.all.firstIndex { self == $0 }!
     }
     
     public func valueToData(value: String) -> Data? {

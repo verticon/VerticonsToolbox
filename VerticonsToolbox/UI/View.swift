@@ -9,7 +9,7 @@
 import UIKit
 
 public extension UIView {
-    @IBInspectable public var cornerRadius: CGFloat {
+    @IBInspectable var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
         }
@@ -19,7 +19,7 @@ public extension UIView {
         }
     }
     
-    @IBInspectable public var borderColor: UIColor? {
+    @IBInspectable var borderColor: UIColor? {
         get {
             if let color = layer.borderColor {
                 return UIColor(cgColor: color)
@@ -31,7 +31,7 @@ public extension UIView {
         }
     }
     
-    @IBInspectable public var borderWidth: CGFloat {
+    @IBInspectable var borderWidth: CGFloat {
         get {
             return layer.borderWidth
         }
@@ -40,7 +40,7 @@ public extension UIView {
         }
     }
     
-    public var viewController : UIViewController? {
+    var viewController : UIViewController? {
         func findViewController(forResponder responder: UIResponder) -> UIViewController? {
             if let nextResponder = responder.next {
                 switch nextResponder {
@@ -59,7 +59,7 @@ public extension UIView {
     }
 
     // Draw a circle with a line through it
-    public func drawFailureIndication(lineWidth: CGFloat) {
+    func drawFailureIndication(lineWidth: CGFloat) {
 
         let context = UIGraphicsGetCurrentContext()!;
         context.saveGState()

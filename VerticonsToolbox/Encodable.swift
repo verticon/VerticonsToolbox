@@ -52,7 +52,7 @@ public func loadFromUserDefaults<T:Encodable>(type: T.Type, withKey key: String)
 
 public func saveToFile<T:Encodable>(_ objects: [T], withName name: String) -> Bool {
     do {
-        let data = NSKeyedArchiver.archivedData(withRootObject: objects.encode())
+        let data = try NSKeyedArchiver.archivedData(withRootObject: objects.encode(), requiringSecureCoding: false)
         try data.write(to: getUrl(forName: name), options: .atomic)
         return true
     } catch {
@@ -65,6 +65,7 @@ public func loadFromFile<T:Encodable>(type: T.Type, withName name: String) -> [T
     do {
         let data = try Data(contentsOf: getUrl(forName: name))
         if let encoded = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Encodable.Properties] {
+        //if let encoded = NSKeyedUnarchiver.unarchivedObject(ofClasses: [[Encodable.Properties].self], from: data) {
             return encoded.decode(type: type)
         }
     } catch {

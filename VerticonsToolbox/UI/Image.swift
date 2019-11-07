@@ -106,14 +106,14 @@ public extension UIImage {
         return failureImage
     }
 
-    public func aspectFit(in: CGSize) -> CGSize {
+    func aspectFit(in: CGSize) -> CGSize {
         let widthRatio = `in`.width / size.width
         let heightRatio = `in`.height / size.height
         let scale = min(widthRatio, heightRatio)
         return CGSize(width: scale * size.width, height: scale * size.height)
     }
     
-    public func aspectFill(in: CGSize) -> CGSize {
+    func aspectFill(in: CGSize) -> CGSize {
         var scaledSize = size
         if scaledSize.width < scaledSize.height {
             var scale = `in`.width / scaledSize.width // Make the width fit exactly
@@ -137,7 +137,7 @@ public extension UIImage {
 
 public extension UIImageView {
     
-    public func setColor(_ newColor: UIColor) {
+    func setColor(_ newColor: UIColor) {
         if let image = self.image {
             self.image = image.withRenderingMode(.alwaysTemplate)
             tintColor = newColor

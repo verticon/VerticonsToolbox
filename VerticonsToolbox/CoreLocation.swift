@@ -29,6 +29,7 @@ public func nameForAuthorizationStatus(_ status: CLAuthorizationStatus) -> Strin
     case .denied: return "Denied"
     case .notDetermined: return "NotDetermined"
     case .restricted: return "Restricted"
+    default: return "Unrecognized"
     }
 }
 
@@ -38,6 +39,7 @@ public func nameForProximity(_ proximity: CLProximity) -> String {
     case .near: return "Near"
     case .far: return "Far"
     case .unknown: return "Unknown"
+    default: return "Unrecognized"
     }
 }
 

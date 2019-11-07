@@ -133,3 +133,11 @@ public class Weak<T: AnyObject> {
         self.reference = reference
     }
 }
+
+public var statusBarHeight: CGFloat {
+    let defaultHeight: CGFloat = 44
+    guard let window = (UIApplication.shared.windows.filter{ $0.isKeyWindow }).first  else { return defaultHeight }
+    return window.windowScene?.statusBarManager?.statusBarFrame.height ?? defaultHeight
+}
+
+

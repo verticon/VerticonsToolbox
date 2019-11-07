@@ -59,6 +59,6 @@ public struct StringEncoding : RawRepresentable, CustomStringConvertible {
     
     /// The index of this StringEncoding in the StringEncoding.all array
     public var index: Int? {
-        return StringEncoding.all.index { self == $0 }
+        return StringEncoding.all.firstIndex { self == $0 }
     }
 }

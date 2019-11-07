@@ -9,11 +9,11 @@
 import UIKit
 
 public extension UIWindow {
-    public var visibleViewController: UIViewController? {
+    var visibleViewController: UIViewController? {
         return UIWindow.getVisibleViewControllerFrom(vc: self.rootViewController)
     }
     
-    public static func getVisibleViewControllerFrom(vc: UIViewController?) -> UIViewController? {
+    static func getVisibleViewControllerFrom(vc: UIViewController?) -> UIViewController? {
         if let nc = vc as? UINavigationController {
             return UIWindow.getVisibleViewControllerFrom(vc: nc.visibleViewController)
         } else if let tc = vc as? UITabBarController {

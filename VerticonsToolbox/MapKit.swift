@@ -42,7 +42,7 @@ public func enclosingRegion(coordinates: [CLLocationCoordinate2D]) -> MKCoordina
 
 public extension MKMapView {
 
-    public func toPoints(meters: Meters) -> Double {
+    func toPoints(meters: Meters) -> Double {
         
         let deltaPoints = 500.0
         
@@ -61,7 +61,7 @@ public extension MKMapView {
         return meters * pointsPerMeter
     }
 
-    public var userIsInteracting: Bool {
+    var userIsInteracting: Bool {
         if let gestureRecognizers = gestureView.gestureRecognizers {
             for recognizer in gestureRecognizers {
                 if recognizer.state != .possible {
@@ -73,7 +73,7 @@ public extension MKMapView {
     }
     
     // TODO: What's up with this? Why not just the MKMapView itself?
-    public var gestureView: UIView {
+    var gestureView: UIView {
         return subviews[0]
     }
 }
@@ -102,6 +102,16 @@ public extension MKCoordinateRegion {
 
         return true
     }
+
+    func toMapRect() -> MKMapRect {
+        let topLeftCoordinate = CLLocationCoordinate2DMake(center.latitude + (span.latitudeDelta/2.0), center.longitude - (span.longitudeDelta/2.0))
+        let topLeftMapPoint = MKMapPoint(topLeftCoordinate)
+
+        let bottomRightCoordinate = CLLocationCoordinate2DMake(center.latitude - (span.latitudeDelta/2.0), center.longitude + (span.longitudeDelta/2.0))
+        let bottomRightMapPoint = MKMapPoint(bottomRightCoordinate)
+
+        return MKMapRect(x: topLeftMapPoint.x, y: topLeftMapPoint.y, width: fabs(bottomRightMapPoint.x - topLeftMapPoint.x),height: fabs(bottomRightMapPoint.y - topLeftMapPoint.y))
+    }
 }
 
 public extension MKMapRect {
@@ -121,11 +131,11 @@ public extension MKMapRect {
 }
 
 public extension MKMapPoint {
-    static public func == (lhs: MKMapPoint, rhs: MKMapPoint) -> Bool {
+    static func == (lhs: MKMapPoint, rhs: MKMapPoint) -> Bool {
         return lhs.x == rhs.x && lhs.y == rhs.y
     }
 
-    static public func != (lhs: MKMapPoint, rhs: MKMapPoint) -> Bool {
+    static func != (lhs: MKMapPoint, rhs: MKMapPoint) -> Bool {
         return !(lhs == rhs)
     }
 }
@@ -139,7 +149,7 @@ public extension MKPolyline {
     // http://paulbourke.net/geometry/pointlineplane/
     // https://stackoverflow.com/questions/11713788/how-to-detect-taps-on-mkpolylines-overlays-like-maps-app
 
-    public func closestPoint(to: MKMapPoint) -> (point: MKMapPoint, distance: CLLocationDistance) {
+    func closestPoint(to: MKMapPoint) -> (point: MKMapPoint, distance: CLLocationDistance) {
 
         var closestPoint = MKMapPoint()
         var distanceTo = CLLocationDistance.infinity
@@ -170,12 +180,12 @@ public extension MKPolyline {
         return (closestPoint, distanceTo)
     }
 
-    public var boundingPolygon: MKPolygon {
+    var boundingPolygon: MKPolygon {
         let corners = boundingMapRect.corners
         return MKPolygon(points: corners, count: corners.count)
     }
 
-    public var  boundingRegion: MKCoordinateRegion {
+    var  boundingRegion: MKCoordinateRegion {
         return MKCoordinateRegion(boundingMapRect)
     }
 }

@@ -25,7 +25,7 @@ public class LogFileViewController: UIViewController {
             if let name = $0 {
                 self.iCloud.exportFile(contents: self.textView.text, name: name, documentPickerPresenter: self) { status in
                     switch status {
-                    case .success(let url): break
+                    case .success: break
                         
                     case .error(let description, let error):
                         alertUser(title: "Cannot Save To iCloud", body: "\(description): \(String(describing: error))")

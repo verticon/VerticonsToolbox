@@ -103,7 +103,9 @@ public struct Bezier {
 			case .closeSubpath:
 				last = nil
 				break;
-			}
+            @unknown default:
+                fatalError("Unrecognized path element type: \(p.type)")
+            }
 		})
 		
 		self.curves = curves
@@ -212,7 +214,7 @@ extension Bezier.Curve {
 			return sum + t/2 * table.weight * self.d(at: tt).distanceTo(.zero)
 		}
 		
-		cache.value.insert((length, t), at: cache.value.index { $0.at>t } ?? cache.value.endIndex) // keep it sorted
+		cache.value.insert((length, t), at: cache.value.firstIndex { $0.at>t } ?? cache.value.endIndex) // keep it sorted
 		
 		return length
 	}

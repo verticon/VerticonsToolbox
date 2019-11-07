@@ -11,22 +11,22 @@ import Foundation
 // TODO: Rethink the forced unwrapping of the String initializers
 public extension Data {
     
-    public init(with: String, using: String.Encoding = .utf8) {
+    init(with: String, using: String.Encoding = .utf8) {
         self.init()
         self.append(with.data(using: using)!)
         self.append(0)
     }
     
-    public init(with: [String], using: String.Encoding = .utf8) {
+    init(with: [String], using: String.Encoding = .utf8) {
         self.init()
         with.forEach { self.append(Data(with: $0, using: using)) }
     }
     
-    public func toString(encoding: String.Encoding = .utf8) -> String {
+    func toString(encoding: String.Encoding = .utf8) -> String {
         return String(data: self, encoding: encoding)!
     }
     
-    public func toStringArray(encoding: String.Encoding = .utf8) -> [String] {
+    func toStringArray(encoding: String.Encoding = .utf8) -> [String] {
         
         return withUnsafeBytes { (ptr: UnsafePointer<Int8>) in
             
@@ -49,7 +49,7 @@ public extension Data {
         }
     }
     
-    public func toHexString(seperator: String) -> String {
+    func toHexString(seperator: String) -> String {
         return self.map { String(format: "%02hhX", $0) }.joined(separator: seperator)
     }
 }
@@ -57,21 +57,21 @@ public extension Data {
 // http://stackoverflow.com/questions/38023838/round-trip-swift-number-types-to-from-data
 public extension Data {
     
-    public init<T>(from value: T) {
+    init<T>(from value: T) {
         var value = value
         self.init(buffer: UnsafeBufferPointer(start: &value, count: 1))
     }
     
-    public func to<T>(type: T.Type) -> T {
+    func to<T>(type: T.Type) -> T {
         return self.withUnsafeBytes { $0.pointee }
     }
     
-    public init<T>(fromArray values: [T]) {
+    init<T>(fromArray values: [T]) {
         var values = values
         self.init(buffer: UnsafeBufferPointer(start: &values, count: values.count))
     }
     
-    public func toArray<T>(type: T.Type) -> [T] {
+    func toArray<T>(type: T.Type) -> [T] {
         return self.withUnsafeBytes {
             [T](UnsafeBufferPointer(start: $0, count: self.count/MemoryLayout<T>.stride))
         }
@@ -87,12 +87,12 @@ public protocol DataConvertible {
 
 public extension DataConvertible {
     
-    public init?(data: Data) {
+    init?(data: Data) {
         guard data.count == MemoryLayout<Self>.size else { return nil }
         self = data.withUnsafeBytes { $0.pointee }
     }
     
-    public var data: Data {
+    var data: Data {
         var value = self
         return Data(buffer: UnsafeBufferPointer(start: &value, count: 1))
     }
