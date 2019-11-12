@@ -57,6 +57,7 @@ public func toDegrees(radians: Double) -> Double { return radians * 180.0 / .pi 
 // Note: I tried to define the UserLocationEvent enum within the UserLocation class (i.e. UserLocation.Event)
 // but a trap occurred on the line which initializes the static instance - I think the Broadcaster caused it.
 public enum UserLocationEvent {
+    case authorizationUpdate(CLAuthorizationStatus)
     case locationUpdate(CLLocation)
     case geocodeUpdate(CLLocation)
     case headingUpdate(CLHeading)
@@ -98,22 +99,24 @@ public class UserLocation : Broadcaster<UserLocationEvent> {
         public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
             
             switch status {
-            case CLAuthorizationStatus.notDetermined:
+            case .notDetermined:
                 manager.requestWhenInUseAuthorization();
+                return
                 
-            case CLAuthorizationStatus.authorizedAlways:
+            case .authorizedAlways:
                 fallthrough
                 
-            case CLAuthorizationStatus.authorizedWhenInUse:
+            case .authorizedWhenInUse:
                 manager.distanceFilter = 1
                 manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 manager.startUpdatingLocation()
                 manager.startUpdatingHeading()
                 
-            default:
-                alertUser(title: "Location Access Not Authorized", body: "\(applicationName) will not be able to provide location related functionality.")
-                break
+            default: break
+                //alertUser(title: "Location Access Not Authorized", body: "\(applicationName) will not be able to provide location related functionality.")
             }
+
+            userLocation.broadcast(.authorizationUpdate(status))
         }
         
         public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
