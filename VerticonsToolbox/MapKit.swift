@@ -80,8 +80,12 @@ public extension MKMapView {
 
 public extension MKCoordinateRegion {
 
-    static func * (spanMultiplier: CLLocationDegrees, region: MKCoordinateRegion) -> MKCoordinateRegion {
+    static func * (spanMultiplier: Double, region: MKCoordinateRegion) -> MKCoordinateRegion {
         return MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: spanMultiplier * region.span.latitudeDelta, longitudeDelta: spanMultiplier * region.span.longitudeDelta))
+    }
+
+    static func / (region: MKCoordinateRegion, spanDivider: Double) -> MKCoordinateRegion {
+        return MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta / spanDivider, longitudeDelta: region.span.longitudeDelta / spanDivider))
     }
 
     func contains(coordinate: CLLocationCoordinate2D) -> Bool {
@@ -90,12 +94,12 @@ public extension MKCoordinateRegion {
         return latCheck && lngCheck
     }
 
-    mutating func zoomOut(to: CLLocationCoordinate2D) -> Bool {
-        guard !contains(coordinate: to) else { return false }
+    mutating func zoomOut(to include: CLLocationCoordinate2D) -> Bool {
+        guard !contains(coordinate: include) else { return false }
 
         let multiplier = 2.25 // zoom out to include the coordinate plus a little bit more
-        let deltaLat = multiplier * abs(center.latitude - to.latitude)
-        let deltaLng = multiplier * abs(center.longitude - to.longitude)
+        let deltaLat = multiplier * abs(center.latitude - include.latitude)
+        let deltaLng = multiplier * abs(center.longitude - include.longitude)
  
         if deltaLat > span.latitudeDelta { span.latitudeDelta = deltaLat }
         if deltaLng > span.longitudeDelta { span.longitudeDelta = deltaLng }
