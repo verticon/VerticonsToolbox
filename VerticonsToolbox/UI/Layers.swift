@@ -15,6 +15,7 @@ public class DebugLayer : CATextLayer {
 
     public static func add(to: UIView) -> DebugLayer {
         let layer = DebugLayer()
+
         layer.frame = to.bounds
         //layer.alignmentMode = kCAAlignmentCenter
         layer.foregroundColor = UIColor.lightGray.withAlphaComponent(0.6).cgColor
@@ -22,6 +23,10 @@ public class DebugLayer : CATextLayer {
         to.layer.addSublayer(layer)
 
         return layer
+    }
+    
+    public func remove() {
+        self.removeFromSuperlayer()
     }
     
     private var lines = [Int : String]()
