@@ -133,6 +133,59 @@ public extension UIImage {
         }
         return scaledSize
     }
+
+    // ********************************************************************************************************
+    
+    private enum BlendMode {
+        case multiply // This results in colors that are at least as dark as either of the two contributing sample colors
+        case screen // This results in colors that are at least as light as either of the two contributing sample colors
+
+    }
+
+    // The degree parameter is internally clamped to the range 0 -> 1.
+
+    // A degree <= 0 yeilds the original image, a degree >= 1 results in black
+    func darken(degree: CGFloat = 0.5) -> UIImage? {
+        return blend(mode: .multiply, degree: degree)
+    }
+
+    // A degree <= 0 yeilds the original image, a degree >= 1 results in white
+    func lighten(degree: CGFloat = 0.5) -> UIImage? {
+        return blend(mode: .screen, degree: degree)
+    }
+
+    private func blend(mode: BlendMode, degree: CGFloat) -> UIImage? {
+        let context = CIContext(options: nil)
+
+        var degree = degree
+        if degree < 0 { degree = 0 }
+        else if degree > 1 { degree = 1 }
+    
+        let filterName: String
+        switch mode {
+        case .multiply:
+            degree = abs(degree - 1.0) // Invert the relationship between the degree and the grayscale value (see backgroundColor)
+            filterName = "CIMultiplyBlendMode"
+        case .screen: // As the degree increases we get more white (see backgroundColor)
+            filterName = "CIScreenBlendMode"
+        }
+
+        let blender = CIFilter(name: filterName)!
+        let backgroundColor = CIColor(color: UIColor(white: degree, alpha: 1))
+
+        guard let inputImage = CIImage(image: self) else { return nil }
+        blender.setValue(inputImage, forKey: kCIInputImageKey)
+
+        guard let backgroundImageGenerator = CIFilter(name: "CIConstantColorGenerator") else { return nil }
+        backgroundImageGenerator.setValue(backgroundColor, forKey: kCIInputColorKey)
+        guard let backgroundImage = backgroundImageGenerator.outputImage?.cropped(to: CGRect(origin: CGPoint.zero, size: self.size)) else { return nil }
+        blender.setValue(backgroundImage, forKey: kCIInputBackgroundImageKey)
+
+        guard let blendedImage = blender.outputImage else { return nil }
+
+        guard let cgImage = context.createCGImage(blendedImage, from: blendedImage.extent) else { return nil }
+        return UIImage(cgImage: cgImage)
+    }
 }
 
 public extension UIImageView {
