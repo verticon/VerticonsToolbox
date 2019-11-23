@@ -127,7 +127,6 @@
 		E1B762061E5DC68600B01E19 /* VerticonsToolbox */ = {
 			isa = PBXGroup;
 			children = (
-				E135E6E9214A836800E6B7E5 /* BezierString */,
 				E1B762081E5DC68600B01E19 /* Info.plist */,
 				E10E23ED1E9BBBF100F27B67 /* Broadcaster.swift */,
 				E131E8651EA528BB00DC8863 /* CoreLocation.swift */,
@@ -143,6 +142,7 @@
 				E1B762261E5DC79200B01E19 /* LogFile.storyboard */,
 				E1B762271E5DC79200B01E19 /* Utility.swift */,
 				E1B762071E5DC68600B01E19 /* VerticonsToolbox.h */,
+				E135E6E9214A836800E6B7E5 /* BezierString */,
 				E1B7620F1E5DC72400B01E19 /* UI */,
 				E1B762101E5DC73500B01E19 /* Utilities */,
 			);

@@ -135,7 +135,58 @@ public extension UIImage {
     }
 
     // ********************************************************************************************************
-    
+
+    struct Pixel : Equatable, CustomStringConvertible {
+        
+        static let red     = Pixel(red: 255, green: 0,   blue: 0,   alpha: 255)
+        static let green   = Pixel(red: 0,   green: 255, blue: 0,   alpha: 255)
+        static let blue    = Pixel(red: 0,   green: 0,   blue: 255, alpha: 255)
+        static let white   = Pixel(red: 255, green: 255, blue: 255, alpha: 255)
+        static let black   = Pixel(red: 0,   green: 0,   blue: 0,   alpha: 255)
+        static let magenta = Pixel(red: 255, green: 0,   blue: 255, alpha: 255)
+        static let yellow  = Pixel(red: 255, green: 255, blue: 0,   alpha: 255)
+        static let cyan    = Pixel(red: 0,   green: 255, blue: 255, alpha: 255)
+
+        static let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+
+        static public func ==(lhs: Pixel, rhs: Pixel) -> Bool { return lhs.color == rhs.color }
+
+        // *************************************************************************************************************
+
+        public var description: String { return String(format: "r %03d, g %03d, b %03d, a %03d", red, green, blue, alpha) }
+
+        private var color: UInt32 = 0
+
+        var red: UInt8 {
+            get { return UInt8((color >> 24) & 0xff) }
+            set { color = (color & 0x00ffffff) | (UInt32(newValue) << 24)  }
+        }
+
+        var green: UInt8 {
+            get { return UInt8((color >> 16) & 0xff) }
+            set { color = (color & 0xff00ffff) | (UInt32(newValue) << 16)  }
+        }
+
+        var blue: UInt8 {
+            get { return UInt8((color >> 8) & 0xff) }
+            set { color = (color & 0xffff00ff) | (UInt32(newValue) << 8)  }
+        }
+
+        var alpha: UInt8 {
+            get { return UInt8(color & 0xff) }
+            set { color = (color & 0xffffff00) | UInt32(newValue)  }
+        }
+
+        var isTransparent: Bool { return red == 0 && blue == 0 && green == 0 && alpha == 0 }
+
+        init(red: UInt8, green: UInt8, blue: UInt8, alpha: UInt8) {
+            self.red = red; self.green = green; self.blue = blue; self.alpha = alpha
+        }
+    }
+
+    // Note: The pointer points into the context hence it becomes invalid when the context is reclaimed.
+    typealias PixelBuffer = (pointer: UnsafeMutablePointer<Pixel>?, context: CGContext?)
+
     private enum BlendMode {
         case multiply // This results in colors that are at least as dark as either of the two contributing sample colors
         case screen // This results in colors that are at least as light as either of the two contributing sample colors
@@ -145,16 +196,16 @@ public extension UIImage {
     // The degree parameter is internally clamped to the range 0 -> 1.
 
     // A degree <= 0 yeilds the original image, a degree >= 1 results in black
-    func darken(degree: CGFloat = 0.5) -> UIImage? {
-        return blend(mode: .multiply, degree: degree)
+    func darken(degree: CGFloat = 0.5, maintainTransparency: Bool = false) -> UIImage? {
+        return blend(mode: .multiply, degree: degree, maintainTransparency: maintainTransparency)
     }
 
     // A degree <= 0 yeilds the original image, a degree >= 1 results in white
-    func lighten(degree: CGFloat = 0.5) -> UIImage? {
-        return blend(mode: .screen, degree: degree)
+    func lighten(degree: CGFloat = 0.5, maintainTransparency: Bool = false) -> UIImage? {
+        return blend(mode: .screen, degree: degree, maintainTransparency: maintainTransparency)
     }
 
-    private func blend(mode: BlendMode, degree: CGFloat) -> UIImage? {
+    private func blend(mode: BlendMode, degree: CGFloat, maintainTransparency: Bool) -> UIImage? {
         let context = CIContext(options: nil)
 
         var degree = degree
@@ -183,8 +234,53 @@ public extension UIImage {
 
         guard let blendedImage = blender.outputImage else { return nil }
 
-        guard let cgImage = context.createCGImage(blendedImage, from: blendedImage.extent) else { return nil }
+        guard var cgImage = context.createCGImage(blendedImage, from: blendedImage.extent) else { return nil }
+
+        if maintainTransparency {
+            let original = self.getPixels()
+            guard let originalPixels = original.pointer else { return nil }
+
+            let blended = getPixels(of: cgImage)
+            guard let blendedPixels = blended.pointer, let pixelContext = blended.context else { return nil }
+
+            for row in 0 ..< cgImage.height {
+                for column in 0 ..< cgImage.width {
+                    let offset = (row * cgImage.width) + column
+
+                    let originalPixel = originalPixels[offset]
+                    if originalPixel.isTransparent {
+                        blendedPixels[offset] = originalPixel
+                    }
+                }
+            }
+
+            cgImage = pixelContext.makeImage()!
+        }
+        
         return UIImage(cgImage: cgImage)
+    }
+
+    func getPixels() -> PixelBuffer {
+        guard let cgImage = self.cgImage else { return (nil, nil) }
+        return getPixels(of: cgImage)
+    }
+
+    private func getPixels(of image: CGImage) -> PixelBuffer {
+
+        let colorSpace       = CGColorSpaceCreateDeviceRGB()
+        let width            = image.width
+        let height           = image.height
+        let bytesPerPixel    = 4
+        let bitsPerComponent = 8
+        let bytesPerRow      = bytesPerPixel * width
+        let bitmapInfo       = Pixel.bitmapInfo
+
+        guard let context = CGContext(data: nil, width: width, height: height, bitsPerComponent: bitsPerComponent, bytesPerRow: bytesPerRow, space: colorSpace, bitmapInfo: bitmapInfo) else { return (nil, nil) }
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        guard let dataPointer = context.data else { return (nil, nil) }
+        let pixelPointer = dataPointer.bindMemory(to: Pixel.self, capacity: width * height)
+
+        return (pixelPointer, context)
     }
 }
 
