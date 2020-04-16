@@ -27,188 +27,188 @@ import UIKit
 
 // MARK: - calculations
 // MARK: CGPoint
-func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+public func +(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
 	return CGPoint(x: lhs.x+rhs.x, y: lhs.y+rhs.y)
 }
 
-func +=(lhs: inout CGPoint, rhs: CGPoint) {
+public func +=(lhs: inout CGPoint, rhs: CGPoint) {
 	lhs.x += rhs.x
 	lhs.y += rhs.y
 }
 
-func -(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+public func -(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
 	return CGPoint(x: lhs.x-rhs.x, y: lhs.y-rhs.y)
 }
 
-func -=(lhs: inout CGPoint, rhs: CGPoint) {
+public func -=(lhs: inout CGPoint, rhs: CGPoint) {
 	lhs.x -= rhs.x
 	lhs.y -= rhs.y
 }
 
-func *(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+public func *(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
 	return CGPoint(x: lhs.x*rhs, y: lhs.y*rhs)
 }
 
-func *=(lhs: inout CGPoint, rhs: CGFloat) {
+public func *=(lhs: inout CGPoint, rhs: CGFloat) {
 	lhs.x *= rhs
 	lhs.y *= rhs
 }
 
-func *(lhs: CGFloat, rhs: CGPoint) -> CGPoint {
+public func *(lhs: CGFloat, rhs: CGPoint) -> CGPoint {
 	return CGPoint(x: rhs.x*lhs, y: rhs.y*lhs)
 }
 
-func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
+public func /(lhs: CGPoint, rhs: CGFloat) -> CGPoint {
 	return CGPoint(x: lhs.x/rhs, y: lhs.y/rhs)
 }
 
-func /=(lhs: inout CGPoint, rhs: CGFloat) {
+public func /=(lhs: inout CGPoint, rhs: CGFloat) {
 	lhs.x /= rhs
 	lhs.y /= rhs
 }
 
-func +(lhs: CGPoint, rhs: CGVector) -> CGPoint {
+public func +(lhs: CGPoint, rhs: CGVector) -> CGPoint {
 	return CGPoint(x: lhs.x+rhs.dx, y: lhs.y+rhs.dy)
 }
 
-func -(lhs: CGPoint, rhs: CGVector) -> CGPoint {
+public func -(lhs: CGPoint, rhs: CGVector) -> CGPoint {
 	return CGPoint(x: lhs.x-rhs.dx, y: lhs.y-rhs.dy)
 }
 
-prefix func -(lhs: CGPoint) -> CGPoint {
+prefix public func -(lhs: CGPoint) -> CGPoint {
 	return CGPoint(x: -lhs.x, y: -lhs.y)
 }
 
 // MARK: CGVector
-func +(lhs: CGVector, rhs: CGVector) -> CGVector {
+public func +(lhs: CGVector, rhs: CGVector) -> CGVector {
 	return CGVector(dx: lhs.dx+rhs.dx, dy: lhs.dy+rhs.dy)
 }
 
-func +=(lhs: inout CGVector, rhs: CGVector) {
+public func +=(lhs: inout CGVector, rhs: CGVector) {
 	lhs.dx += rhs.dx
 	lhs.dy += rhs.dy
 }
 
-func -(lhs: CGVector, rhs: CGVector) -> CGVector {
+public func -(lhs: CGVector, rhs: CGVector) -> CGVector {
 	return CGVector(dx: lhs.dx-rhs.dx, dy: lhs.dy-rhs.dy)
 }
 
-func -=(lhs: inout CGVector, rhs: CGVector) {
+public func -=(lhs: inout CGVector, rhs: CGVector) {
 	lhs.dx -= rhs.dx
 	lhs.dy -= rhs.dy
 }
 
-func *(lhs: CGVector, rhs: CGFloat) -> CGVector {
+public func *(lhs: CGVector, rhs: CGFloat) -> CGVector {
 	return CGVector(dx: lhs.dx*rhs, dy: lhs.dy*rhs)
 }
 
-func *=(lhs: inout CGVector, rhs: CGFloat) {
+public func *=(lhs: inout CGVector, rhs: CGFloat) {
 	lhs.dx *= rhs
 	lhs.dy *= rhs
 }
 
-func *(lhs: CGFloat, rhs: CGVector) -> CGVector {
+public func *(lhs: CGFloat, rhs: CGVector) -> CGVector {
 	return CGVector(dx: rhs.dx*lhs, dy: rhs.dy*lhs)
 }
 
-func /(lhs: CGVector, rhs: CGFloat) -> CGVector {
+public func /(lhs: CGVector, rhs: CGFloat) -> CGVector {
 	return CGVector(dx: lhs.dx/rhs, dy: lhs.dy/rhs)
 }
 
-func /=(lhs: inout CGVector, rhs: CGFloat) {
+public func /=(lhs: inout CGVector, rhs: CGFloat) {
 	lhs.dx /= rhs
 	lhs.dy /= rhs
 }
 
 // MARK: CGSize
-func +(lhs: CGSize, rhs: CGSize) -> CGSize {
+public func +(lhs: CGSize, rhs: CGSize) -> CGSize {
 	return CGSize(width: lhs.width+rhs.width, height: lhs.height+rhs.height)
 }
 
-func +=(lhs: inout CGSize, rhs: CGSize) {
+public func +=(lhs: inout CGSize, rhs: CGSize) {
 	lhs.width += rhs.width
 	lhs.height += rhs.height
 }
 
-func -(lhs: CGSize, rhs: CGSize) -> CGSize {
+public func -(lhs: CGSize, rhs: CGSize) -> CGSize {
 	return CGSize(width: lhs.width-rhs.width, height: lhs.height-rhs.height)
 }
 
-func -=(lhs: inout CGSize, rhs: CGSize) {
+public func -=(lhs: inout CGSize, rhs: CGSize) {
 	lhs.width -= rhs.width
 	lhs.height -= rhs.height
 }
 
-func *(lhs: CGFloat, rhs: CGSize) -> CGSize {
+public func *(lhs: CGFloat, rhs: CGSize) -> CGSize {
 	return CGSize(width: rhs.width*lhs, height: rhs.height*lhs)
 }
 
-func *(lhs: CGSize, rhs: CGFloat) -> CGSize {
+public func *(lhs: CGSize, rhs: CGFloat) -> CGSize {
 	return CGSize(width: lhs.width*rhs, height: lhs.height*rhs)
 }
 
-func *=(lhs: inout CGSize, rhs: CGFloat) {
+public func *=(lhs: inout CGSize, rhs: CGFloat) {
 	lhs.width *= rhs
 	lhs.height *= rhs
 }
 
-func /(lhs: CGSize, rhs: CGFloat) -> CGSize {
+public func /(lhs: CGSize, rhs: CGFloat) -> CGSize {
 	return CGSize(width: lhs.width/rhs, height: lhs.height/rhs)
 }
 
-func /=(lhs: inout CGSize, rhs: CGFloat) {
+public func /=(lhs: inout CGSize, rhs: CGFloat) {
 	lhs.width /= rhs
 	lhs.height /= rhs
 }
 
 // MARK: CGRect
-func *(lhs: CGRect, rhs: CGFloat) -> CGRect {
+public func *(lhs: CGRect, rhs: CGFloat) -> CGRect {
 	return CGRect(origin: lhs.origin*rhs, size: lhs.size*rhs)
 }
 
-func *(lhs: CGFloat, rhs: CGRect) -> CGRect {
+public func *(lhs: CGFloat, rhs: CGRect) -> CGRect {
 	return CGRect(origin: lhs*rhs.origin, size: lhs*rhs.size)
 }
 
-func *=(lhs: inout CGRect, rhs: CGFloat) {
+public func *=(lhs: inout CGRect, rhs: CGFloat) {
 	lhs.origin *= rhs
 	lhs.size *= rhs
 }
 
-func /(lhs: CGRect, rhs: CGFloat) -> CGRect {
+public func /(lhs: CGRect, rhs: CGFloat) -> CGRect {
 	return CGRect(origin: lhs.origin/rhs, size: lhs.size/rhs)
 }
 
-func /=(lhs: inout CGRect, rhs: CGFloat) {
+public func /=(lhs: inout CGRect, rhs: CGFloat) {
 	lhs.origin /= rhs
 	lhs.size /= rhs
 }
 
-func +(lhs: CGRect, rhs: CGPoint) -> CGRect {
+public func +(lhs: CGRect, rhs: CGPoint) -> CGRect {
 	return lhs.offsetBy(dx: rhs.x, dy: rhs.y)
 }
 
-func -(lhs: CGRect, rhs: CGPoint) -> CGRect {
+public func -(lhs: CGRect, rhs: CGPoint) -> CGRect {
 	return lhs.offsetBy(dx: -rhs.x, dy: -rhs.y)
 }
 
-func +(lhs: CGRect, rhs: CGSize) -> CGRect {
+public func +(lhs: CGRect, rhs: CGSize) -> CGRect {
 	return CGRect(origin: lhs.origin, size: lhs.size+rhs)
 }
 
-func -(lhs: CGRect, rhs: CGSize) -> CGRect {
+public func -(lhs: CGRect, rhs: CGSize) -> CGRect {
 	return CGRect(origin: lhs.origin, size: lhs.size-rhs)
 }
 
 // MARK: - helpers
 
 /// Determines whether the second vector is above > 0 or below < 0 the first one
-func *(lhs: CGPoint, rhs: CGPoint ) -> CGFloat {
+public func *(lhs: CGPoint, rhs: CGPoint ) -> CGFloat {
 	return lhs.x*rhs.y - lhs.y*rhs.x
 }
 
 /// smallest angle between 2 angles
-func arcFi( _ fi1: CGFloat, fi2: CGFloat ) -> CGFloat {
+public func arcFi( _ fi1: CGFloat, fi2: CGFloat ) -> CGFloat {
 	let p = CGPoint(x: cos(fi1)-cos(fi2), y: sin(fi1)-sin(fi2))
 	
 	let dSqr = p.x*p.x + p.y*p.y
@@ -219,13 +219,13 @@ func arcFi( _ fi1: CGFloat, fi2: CGFloat ) -> CGFloat {
 }
 
 /// whether fi2 is larger than fi1 in reference to the ref angle
-func compareAngles( _ ref: CGFloat, fi1: CGFloat, fi2: CGFloat ) -> CGFloat {
+public func compareAngles( _ ref: CGFloat, fi1: CGFloat, fi2: CGFloat ) -> CGFloat {
 	return -arcFi(ref, fi2: fi1)+arcFi(ref, fi2: fi2)
 }
 
 /// intersection
 
-func lineIntersection( segmentStart p1:CGPoint, segmentEnd p2:CGPoint,
+public func lineIntersection( segmentStart p1:CGPoint, segmentEnd p2:CGPoint,
                        lineStart p3:CGPoint, lineEnd p4:CGPoint,
                        insideSegment: Bool = true, lineIsSegment: Bool = false, hardUpperLimit: Bool = false ) -> CGPoint? {
 	
@@ -265,14 +265,14 @@ func lineIntersection( segmentStart p1:CGPoint, segmentEnd p2:CGPoint,
 }
 
 
-func segmentsIntersection(_ segment1: (CGPoint, CGPoint), _ segment2: (CGPoint, CGPoint)) -> CGPoint? {
+public func segmentsIntersection(_ segment1: (CGPoint, CGPoint), _ segment2: (CGPoint, CGPoint)) -> CGPoint? {
 	return lineIntersection(segmentStart: segment1.0, segmentEnd: segment1.1, lineStart: segment2.0, lineEnd: segment2.1,
 	                        insideSegment: true, lineIsSegment: true, hardUpperLimit: true)
 }
 
 /// center of circle through points
 
-func circleCenter(_ p0: CGPoint, p1: CGPoint, p2: CGPoint) -> CGPoint? {
+public func circleCenter(_ p0: CGPoint, p1: CGPoint, p2: CGPoint) -> CGPoint? {
 	
 	let p01 = (p0+p1)/2 // midpoint
 	let p12 = (p1+p2)/2
@@ -299,7 +299,7 @@ extension CGFloat {
 	
 	static let Phi = CGFloat(1.618033988749894848204586834)
 	
-	static func random(_ d:CGFloat = 1) -> CGFloat {
+	static public func random(_ d:CGFloat = 1) -> CGFloat {
 		
 		return CGFloat(arc4random())/CGFloat(UInt32.max) * d
 		
@@ -343,7 +343,7 @@ extension CGRect {
 		return CGPoint(x: self.midX, y: self.midY)
 	}
 	
-	func transformed(_ t: CGAffineTransform) -> CGRect {
+	public func transformed(_ t: CGAffineTransform) -> CGRect {
 		return self.applying(t)
 	}
 	
@@ -356,24 +356,24 @@ extension CGRect {
 
 extension CGPoint {
 	/// distance to another point
-	func distanceTo(_ point: CGPoint) -> CGFloat {
+	public func distanceTo(_ point: CGPoint) -> CGFloat {
 		return sqrt(pow(self.x-point.x, 2) + pow(self.y-point.y, 2))
 	}
 	
-	func integral() -> CGPoint {
+	public func integral() -> CGPoint {
 		return CGPoint(x: round(self.x), y: round(self.y))
 	}
 	
-	mutating func integrate() {
+	mutating public func integrate() {
 		self.x = round(self.x)
 		self.y = round(self.y)
 	}
 	
-	func transformed(_ t: CGAffineTransform) -> CGPoint {
+	public func transformed(_ t: CGAffineTransform) -> CGPoint {
 		return self.applying(t)
 	}
 	
-	func normalized() -> CGPoint {
+	public func normalized() -> CGPoint {
 		if self == .zero {
 			return CGPoint(x: 1, y: 0)
 		}
@@ -411,13 +411,13 @@ extension CGPoint {
 }
 
 extension CGSize {
-	func integral() -> CGSize {
+	public func integral() -> CGSize {
 		var s = self
 		s.integrate()
 		return s
 	}
 	
-	mutating func integrate() {
+	mutating public func integrate() {
 		self.width = round(self.width)
 		self.height = round(self.height)
 	}

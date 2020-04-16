@@ -102,7 +102,6 @@
 			children = (
 				E135E6EA214A851F00E6B7E5 /* Bezier.swift */,
 				E135E6EC214A851F00E6B7E5 /* BezierString.swift */,
-				E135E6EB214A851F00E6B7E5 /* Geometry.swift */,
 			);
 			path = BezierString;
 			sourceTree = "<group>";
@@ -133,6 +132,7 @@
 				E1BED7731ECC6FC7004A32D0 /* Data.swift */,
 				E15B51441F8C1B84009B8E38 /* Email.swift */,
 				E1B2E5581E8F0C6A00B6FFC1 /* Encodable.swift */,
+				E135E6EB214A851F00E6B7E5 /* Geometry.swift */,
 				E17AFEEA1FA203A100AFA1EA /* ICloud.swift */,
 				E1B762261E5DC79200B01E19 /* LogFile.storyboard */,
 				E1B762231E5DC79200B01E19 /* LogFileViewController.swift */,
