@@ -83,9 +83,15 @@ public extension MKCoordinateRegion {
     static func * (spanMultiplier: Double, region: MKCoordinateRegion) -> MKCoordinateRegion {
         return MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: spanMultiplier * region.span.latitudeDelta, longitudeDelta: spanMultiplier * region.span.longitudeDelta))
     }
+    static func *= (region: inout MKCoordinateRegion, spanMultiplier: Double) {
+        region = spanMultiplier * region
+    }
 
     static func / (region: MKCoordinateRegion, spanDivider: Double) -> MKCoordinateRegion {
         return MKCoordinateRegion(center: region.center, span: MKCoordinateSpan(latitudeDelta: region.span.latitudeDelta / spanDivider, longitudeDelta: region.span.longitudeDelta / spanDivider))
+    }
+    static func /= (region: inout MKCoordinateRegion, spanDivider: Double) {
+        region = region / spanDivider
     }
 
     func contains(coordinate: CLLocationCoordinate2D) -> Bool {
