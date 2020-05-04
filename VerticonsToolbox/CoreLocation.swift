@@ -200,3 +200,7 @@ public func makeRect(center: CLLocationCoordinate2D, span: MKCoordinateSpan) -> 
     let lowerRightCornerPoint = MKMapPoint(southEastCornetCoordinate)
     return MKMapRect(x: upperLeftCornerPoint.x, y: upperLeftCornerPoint.y, width: lowerRightCornerPoint.x - upperLeftCornerPoint.x, height: lowerRightCornerPoint.y - upperLeftCornerPoint.y)
 }
+
+public func *(lhs: Double, rhs: MKCoordinateSpan) -> MKCoordinateSpan {
+    return MKCoordinateSpan(latitudeDelta: lhs * rhs.latitudeDelta, longitudeDelta: lhs * rhs.longitudeDelta)
+}
