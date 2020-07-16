@@ -111,6 +111,81 @@ public extension UIView {
     }
 }
 
+public struct MarchingAntsRect {
+    private let rect: CAShapeLayer
+    private let rectAnimation: CABasicAnimation
+    private let rectAnimationKey = "marchingAntsBorder"
+
+    public init(bounds: CGRect, color: UIColor) {
+
+        rect = CAShapeLayer()
+        rect.bounds = bounds
+        rect.strokeColor = color.cgColor
+        rect.fillColor = nil
+        rect.lineWidth = 2
+        rect.lineDashPattern = [10,5,5,5]
+        rect.lineDashPhase = 0
+
+        let path = CGMutablePath()
+        let minX: CGFloat = rect.lineWidth
+        let maxX: CGFloat = rect.bounds.maxX - rect.lineWidth
+        let minY: CGFloat = rect.lineWidth
+        let maxY: CGFloat = rect.bounds.maxY - rect.lineWidth
+        path.addLines(between: [
+                        CGPoint(x: minX, y: minY),
+                        CGPoint(x: maxX, y: minY),
+                        CGPoint(x: maxX, y: maxY),
+                        CGPoint(x: minX, y: maxY),
+                        CGPoint(x: minX, y: minY)
+                      ])
+        rect.path = path
+
+        rectAnimation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.lineDashPhase))
+        rectAnimation.fromValue = 0
+        rectAnimation.toValue = rect.lineDashPattern?.reduce(0) { $0 + $1.intValue }
+        rectAnimation.duration = 1
+        rectAnimation.repeatCount = Float.greatestFiniteMagnitude
+    }
+
+    public var bounds: CGRect { return rect.bounds }
+
+    public var installed: Bool { rect.superlayer != nil }
+
+    public enum Installation : Error {
+        case notInstalled
+        case alreadyInstalled
+    }
+
+    public func install(in: UIView) throws {
+        guard !installed else { throw Installation.alreadyInstalled }
+
+        rect.position = `in`.layer.position
+        `in`.layer.addSublayer(rect)
+    }
+
+    public func startMarching() throws {
+        guard installed else { throw Installation.notInstalled }
+
+        rect.add(rectAnimation, forKey: rectAnimationKey)
+    }
+
+    public var isMarching: Bool {
+        return installed && rect.animation(forKey: rectAnimationKey) != nil
+    }
+
+    public func stopMarching() throws {
+        guard installed else { throw Installation.notInstalled }
+
+        rect.removeAnimation(forKey: rectAnimationKey)
+    }
+
+    public func uninstall() throws {
+        guard installed else { throw Installation.notInstalled }
+
+        rect.removeFromSuperlayer()
+    }
+}
+
 /*
 public extension UIView {
     /*
