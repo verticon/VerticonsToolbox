@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VerticonsToolbox"
-  s.version      = "0.0.10"
+  s.version      = "0.1.0"
   s.summary      = "A collection of UI extensions, utility functions, etc."
 
   # This description is used to generate tags and improve search results.
@@ -72,7 +72,9 @@ Pod::Spec.new do |s|
   # s.osx.deployment_target = "10.7"
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"
-  s.ios.deployment_target = "11.0"
+  s.ios.deployment_target = "13.0"
+
+  s.swift_version = '5.0'
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
