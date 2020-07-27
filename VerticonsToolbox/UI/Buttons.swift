@@ -375,10 +375,17 @@ public class DropDownListButton: DropDownButton {
         
         private var list: List
         private let cellId = "ListCell"
-        
-        init(list: List) {
+        private let cellBackgroundColor: UIColor
+        private let cellTextColor: UIColor
+
+        init(list: List, tableBackgroundColor: UIColor = .white, cellBackgroundColor: UIColor = .white, cellTextColor: UIColor = .black) {
             self.list = list
+            self.cellBackgroundColor = cellBackgroundColor
+            self.cellTextColor = cellTextColor
+
             super.init(style: .plain)
+
+            self.tableView.backgroundColor = tableBackgroundColor
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -399,7 +406,11 @@ public class DropDownListButton: DropDownButton {
         
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+            cell.backgroundColor = cellBackgroundColor
+
             cell.textLabel?.text = list.items[indexPath.row].description
+            cell.textLabel?.textColor = cellTextColor
+
             return cell
         }
         
@@ -409,7 +420,21 @@ public class DropDownListButton: DropDownButton {
     }
     
     private var list: List?
+    public var listBackgroundColor: UIColor = .white
+    public var itemBackgroundColor: UIColor = .white
+    public var itemTextColor: UIColor = .black
 
+    public init(listBackgroundColor: UIColor = .white, itemBackgroundColor: UIColor = .white, itemTextColor: UIColor = .black) {
+        self.listBackgroundColor = listBackgroundColor
+        self.itemBackgroundColor = itemBackgroundColor
+        self.itemTextColor = itemTextColor
+        super.init(frame: CGRect.zero)
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     public func setList(items: [CustomStringConvertible]) -> Self? {
         guard items.count > 0 else { return nil }
         
@@ -420,7 +445,7 @@ public class DropDownListButton: DropDownButton {
     
     fileprivate override func makePopoverViewController() -> UIViewController? {
         guard let list = self.list else { return nil }
-        return ListViewController(list: list)
+        return ListViewController(list: list, tableBackgroundColor: listBackgroundColor, cellBackgroundColor: itemBackgroundColor, cellTextColor: itemTextColor)
     }
 }
 
@@ -541,6 +566,19 @@ public class DropDownListBarButton: DropDownBarButton {
 
     private let _innerButton = DropDownListButton()
     fileprivate override var innerButton: DropDownListButton { return _innerButton }
+
+    public var listBackgroundColor: UIColor {
+        get { return _innerButton.listBackgroundColor }
+        set { _innerButton.listBackgroundColor = newValue }
+    }
+    public var itemBackgroundColor: UIColor {
+        get { return _innerButton.itemBackgroundColor }
+        set { _innerButton.itemBackgroundColor = newValue }
+    }
+    public var itemTextColor: UIColor {
+        get { return _innerButton.itemTextColor }
+        set { _innerButton.itemTextColor = newValue }
+    }
 }
 
 public class DropDownMenuBarButton: DropDownBarButton {
@@ -555,5 +593,5 @@ public class DropDownMenuBarButton: DropDownBarButton {
     public var selectedItem: CustomStringConvertible? {
         return innerButton.selectedItem
     }
-    }
+}
 
