@@ -676,6 +676,11 @@ public class DropDownBarButton: UIBarButtonItem {
         get { return innerButton.itemTextColor }
         set { innerButton.itemTextColor = newValue }
     }
+
+    public var size : CGSize {
+        get { return customView!.bounds.size }
+        set { customView!.bounds.size = newValue }
+    }
 }
 
 public class DropDownListBarButton: DropDownBarButton {
