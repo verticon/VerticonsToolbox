@@ -12,7 +12,9 @@ public extension UIWindow {
     var visibleViewController: UIViewController? {
         return UIWindow.getVisibleViewControllerFrom(vc: self.rootViewController)
     }
-    
+
+    static var mainWindow: UIWindow { return UIApplication.shared.windows.first { $0.isKeyWindow }! }
+
     static func getVisibleViewControllerFrom(vc: UIViewController?) -> UIViewController? {
         if let nc = vc as? UINavigationController {
             return UIWindow.getVisibleViewControllerFrom(vc: nc.visibleViewController)

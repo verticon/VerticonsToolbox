@@ -233,9 +233,14 @@ public class RadioButtonGroup {
     }
 }
 
+
 @IBDesignable
 public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
-    
+ 
+    public var listBackgroundColor: UIColor = .white
+    public var itemBackgroundColor: UIColor = .white
+    public var itemTextColor: UIColor = .black
+
     private var popoverViewController: UIViewController?
 
     override init(frame: CGRect) {
@@ -331,7 +336,7 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
         guard let viewController = makePopoverViewController() else { return }
 
         viewController.modalPresentationStyle = .popover
-        viewController.preferredContentSize = CGSize(width: 225, height: 250) // TODO: Calculate the preferred size from the actual content.
+        viewController.preferredContentSize = CGSize(width: 2 * UIWindow.mainWindow.bounds.width / 3, height: UIWindow.mainWindow.bounds.height / 4)
         let presentationController = viewController.popoverPresentationController!
         presentationController.delegate = self
         if let barButton = outerButton { presentationController.barButtonItem = barButton } else { presentationController.sourceView = self.imageView }
@@ -359,7 +364,6 @@ public class DropDownButton: UIButton, UIPopoverPresentationControllerDelegate {
     }
 }
 
-// TODO: Consider what to do when a list item's description does not fit.
 @IBDesignable
 public class DropDownListButton: DropDownButton {
     
@@ -371,81 +375,177 @@ public class DropDownListButton: DropDownButton {
         }
     }
     
-    fileprivate class ListViewController: UITableViewController {
-        
-        private var list: List
-        private let cellId = "ListCell"
-        private let cellBackgroundColor: UIColor
-        private let cellTextColor: UIColor
+    fileprivate class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-        init(list: List, tableBackgroundColor: UIColor = .white, cellBackgroundColor: UIColor = .white, cellTextColor: UIColor = .black) {
+        // The ListCell contains a scroll view which allows text that is wider than the width of the table to be seen.
+        // That scroll view's contentSize os set in such a way (see ListViewController.cellforRowAt) as that vertical
+        // scrolling is disabled. The presense of the scroll view prevents rows from being selected (ie. taps do not
+        // reach the cell). A tap gesture recognizer is used to select the row and invoke the table delegate's didSelectRowAt
+        // method.
+        class ListCell : UITableViewCell {
+
+            let item = UILabel()
+            let scrollView = UIScrollView()
+
+            override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+
+                super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+                item.translatesAutoresizingMaskIntoConstraints = false
+                scrollView.addSubview(item)
+                NSLayoutConstraint.activate([
+                    item.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: 10),
+                    item.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
+                    item.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
+                ])
+
+                scrollView.translatesAutoresizingMaskIntoConstraints = false
+                contentView.addSubview(scrollView)
+                NSLayoutConstraint.activate([
+                    scrollView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+                    scrollView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+                    scrollView.topAnchor.constraint(equalTo: contentView.topAnchor),
+                    scrollView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+                ])
+
+                let tapHandler = UITapGestureRecognizer(target: self, action: #selector(selectRow))
+                scrollView.addGestureRecognizer(tapHandler)
+            }
+            
+            required init?(coder: NSCoder) {
+                fatalError("init(coder:) has not been implemented")
+            }
+
+            @objc private func selectRow(_ recognizer: UITapGestureRecognizer) {
+                switch recognizer.state {
+                case .ended:
+                    // Traverse the view hierarchy to find first the cell and then the table.
+                    // When they have both been found, invoke the table delegate's didSelectRowAt method
+                    func selectRow(current: UIView, cell: UITableViewCell?) {
+
+                        if let cell = cell { // We've already found the cell; we're looking for the table
+                            if let table = current as? UITableView {
+                                guard let index = table.indexPath(for: cell) else { fatalError("No index path for the cell that was tapped.") }
+                                //table.delegate?.tableView?(table, didDeselectRowAt: index) Why did this not work???
+                                if let vc = table.delegate as? DropDownListButton.ListViewController {
+                                    table.selectRow(at: index, animated: true, scrollPosition: .none)
+                                    vc.tableView(table, didSelectRowAt: index)
+                                }
+                                //table.reloadData()
+                            }
+                            else { // Keep looking for the table
+                                guard let next = cell.superview else { fatalError("We reached the top of the view hierarchy without finding the table.")  }
+                                selectRow(current: next, cell: cell)
+                            }
+                        }
+                        else { // Keep looking for the cell
+                            guard let next = current.superview else { fatalError("We reached the top of the view hierarchy without finding the cell and the table.")  }
+                            selectRow(current: next, cell: current as? UITableViewCell)
+                        }
+                    }
+
+                    selectRow(current: self, cell: nil)
+
+                default: break
+                }
+            }
+        }
+
+        let cellBackgroundColor: UIColor
+        let cellTextColor: UIColor
+
+        private var tableView = UITableView()
+        private var list: List
+        private let cellId = "DropDownListCell"
+
+        init(list: List, title: String?, tableBackgroundColor: UIColor, cellBackgroundColor: UIColor, cellTextColor: UIColor) {
             self.list = list
             self.cellBackgroundColor = cellBackgroundColor
             self.cellTextColor = cellTextColor
 
-            super.init(style: .plain)
+            super.init(nibName: nil, bundle: nil)
 
-            self.tableView.backgroundColor = tableBackgroundColor
+            tableView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(tableView)
+            NSLayoutConstraint.activate([
+                tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+                tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+                tableView.topAnchor.constraint(equalTo: view.topAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
+
+            tableView.delegate = self
+            tableView.dataSource = self
+
+            if let title = title {
+                let header = UILabel()
+                header.frame = CGRect(x: 0, y: 0, width: 0, height: 44)
+                header.text = title
+                header.textAlignment = .center
+                tableView.tableHeaderView = header
+            }
+ 
+            // tableView.bounces = false
+            tableView.backgroundColor = tableBackgroundColor
+
+            tableView.register(ListCell.self, forCellReuseIdentifier: cellId)
         }
         
         required init?(coder aDecoder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
 
-        override func viewDidLoad() {
-            tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
-        }
-        
-        override func numberOfSections(in tableView: UITableView) -> Int {
+        func numberOfSections(in tableView: UITableView) -> Int {
             return 1
         }
-        
-        override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return list.items.count
         }
         
-        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-            cell.backgroundColor = cellBackgroundColor
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            let _cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+            guard let cell = _cell as? ListCell else { return _cell }
 
-            cell.textLabel?.text = list.items[indexPath.row].description
-            cell.textLabel?.textColor = cellTextColor
+            cell.item.textColor = cellTextColor
+            cell.item.backgroundColor = cellBackgroundColor
+            cell.item.text = list.items[indexPath.row].description
+
+            // Apparently, a height of 0 causes the content view's height to be the height of its content; effectively disabling vertical scrolling.
+            cell.scrollView.contentSize = CGSize(width: cell.item.intrinsicContentSize.width + 20, height: 0)
+            cell.scrollView.backgroundColor = cellBackgroundColor
 
             return cell
         }
         
-        override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             tableView.deselectRow(at: indexPath, animated: false)
         }
     }
-    
+
     private var list: List?
-    public var listBackgroundColor: UIColor = .white
-    public var itemBackgroundColor: UIColor = .white
-    public var itemTextColor: UIColor = .black
+    private var title: String?
 
     public init(listBackgroundColor: UIColor = .white, itemBackgroundColor: UIColor = .white, itemTextColor: UIColor = .black) {
+        super.init(frame: CGRect.zero)
+
         self.listBackgroundColor = listBackgroundColor
         self.itemBackgroundColor = itemBackgroundColor
         self.itemTextColor = itemTextColor
-        super.init(frame: CGRect.zero)
     }
     
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    public func setList(items: [CustomStringConvertible]) -> Self? {
-        guard items.count > 0 else { return nil }
-        
+    public func setList(title: String?, items: [CustomStringConvertible]) {
+        self.title = title
         list = List(items: items)
-        
-        return self
     }
     
     fileprivate override func makePopoverViewController() -> UIViewController? {
         guard let list = self.list else { return nil }
-        return ListViewController(list: list, tableBackgroundColor: listBackgroundColor, cellBackgroundColor: itemBackgroundColor, cellTextColor: itemTextColor)
+        return ListViewController(list: list, title: title, tableBackgroundColor: listBackgroundColor, cellBackgroundColor: itemBackgroundColor, cellTextColor: itemTextColor)
     }
 }
 
@@ -470,16 +570,15 @@ public class DropDownMenuButton: DropDownButton {
         public var selectedItem: CustomStringConvertible {
             return items[selection]
         }
-        
     }
     
     private class MenuViewController: DropDownListButton.ListViewController {
         
         private var menu: Menu
 
-        init(menu: Menu) {
+        init(menu: Menu, title: String?, tableBackgroundColor: UIColor, cellBackgroundColor: UIColor, cellTextColor: UIColor) {
             self.menu = menu
-            super.init(list: menu)
+            super.init(list: menu, title: title, tableBackgroundColor: tableBackgroundColor, cellBackgroundColor: cellBackgroundColor, cellTextColor: cellTextColor)
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -493,21 +592,30 @@ public class DropDownMenuButton: DropDownButton {
         }
         
         override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            super.tableView(tableView, didSelectRowAt: indexPath)
             menu.selection = indexPath.item
             self.dismiss(animated: true, completion: nil)
+        }
+
+        func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+            guard let accessory = cell.accessoryView else { return }
+            accessory.backgroundColor = cellBackgroundColor
+            accessory.tintColor = cellTextColor
         }
     }
     
     private var menu: Menu?
+    private var title: String?
 
     public override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         setTitle("Menu", for: .normal)
     }
     
-    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Self? {
-        guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return nil }
-        
+    public func setMenu(title: String?, items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) {
+        guard items.count > 0 && initialSelection >= 0 && initialSelection < items.count else { return }
+
+        self.title = title
         menu = Menu(items: items, initialSelection: initialSelection, selectionHandler: { selection in
             
             self.collapse()
@@ -523,8 +631,6 @@ public class DropDownMenuButton: DropDownButton {
         })
         
         setTitle(menu!.items[initialSelection].description, for: .normal)
-        
-        return self
     }
 
     public var selectedItem: CustomStringConvertible? {
@@ -533,12 +639,16 @@ public class DropDownMenuButton: DropDownButton {
 
     fileprivate override func makePopoverViewController() -> UIViewController? {
         guard let menu = self.menu else { return nil }
-        return MenuViewController(menu: menu)
+        return MenuViewController(menu: menu, title: title, tableBackgroundColor: listBackgroundColor, cellBackgroundColor: itemBackgroundColor, cellTextColor: itemTextColor)
     }
 }
 
+
 public class DropDownBarButton: UIBarButtonItem {
-    
+
+    private let _innerButton = DropDownButton()
+    fileprivate var innerButton: DropDownButton { return _innerButton }
+
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initialize()
@@ -554,37 +664,34 @@ public class DropDownBarButton: UIBarButtonItem {
         customView = innerButton
     }
 
-    private let _innerButton = DropDownButton()
-    fileprivate var innerButton: DropDownButton { return _innerButton }
+    public var listBackgroundColor: UIColor {
+        get { return innerButton.listBackgroundColor }
+        set { innerButton.listBackgroundColor = newValue }
+    }
+    public var itemBackgroundColor: UIColor {
+        get { return innerButton.itemBackgroundColor }
+        set { innerButton.itemBackgroundColor = newValue }
+    }
+    public var itemTextColor: UIColor {
+        get { return innerButton.itemTextColor }
+        set { innerButton.itemTextColor = newValue }
+    }
 }
 
 public class DropDownListBarButton: DropDownBarButton {
     
-    public func setList(items: [CustomStringConvertible]) -> Self? {
-        return innerButton.setList(items: items) == nil ? nil : self
+    public func setList(title: String?, items: [CustomStringConvertible]) {
+        innerButton.setList(title: title, items: items)
     }
 
     private let _innerButton = DropDownListButton()
     fileprivate override var innerButton: DropDownListButton { return _innerButton }
-
-    public var listBackgroundColor: UIColor {
-        get { return _innerButton.listBackgroundColor }
-        set { _innerButton.listBackgroundColor = newValue }
-    }
-    public var itemBackgroundColor: UIColor {
-        get { return _innerButton.itemBackgroundColor }
-        set { _innerButton.itemBackgroundColor = newValue }
-    }
-    public var itemTextColor: UIColor {
-        get { return _innerButton.itemTextColor }
-        set { _innerButton.itemTextColor = newValue }
-    }
 }
 
 public class DropDownMenuBarButton: DropDownBarButton {
     
-    public func setMenu(items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) -> Self? {
-        return innerButton.setMenu(items: items, initialSelection: initialSelection, selectionHandler: selectionHandler) == nil ? nil : self
+    public func setMenu(title: String?, items: [CustomStringConvertible], initialSelection: Int, selectionHandler: @escaping ((CustomStringConvertible) -> Void)) {
+        innerButton.setMenu(title: title, items: items, initialSelection: initialSelection, selectionHandler: selectionHandler)
     }
 
     private let _innerButton = DropDownMenuButton()
